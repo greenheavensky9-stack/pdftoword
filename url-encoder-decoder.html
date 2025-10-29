@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Encoder/Decoder - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 120px;
+      font-family: inherit;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-encode {
+      background-color: var(--primary-red);
+    }
+
+    .button-decode {
+      background-color: #2ecc71;
+    }
+
+    .button-decode:hover {
+      background-color: #27ae60;
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .url-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .error-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: #fed7d7;
+      border-radius: var(--rounded);
+      border: 2px solid #e53e3e;
+      text-align: left;
+      color: #c53030;
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .error-summary {
+      background-color: #fed7d7;
+      border: 1px solid #e53e3e;
+    }
+
+    .error-summary p {
+      color: #c53030;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .process-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--rounded);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge-encode {
+      background-color: #fed7d7;
+      color: #c53030;
+      border: 1px solid #feb2b2;
+    }
+
+    .badge-decode {
+      background-color: #c6f6d5;
+      color: #276749;
+      border: 1px solid #9ae6b4;
+    }
+
+    .url-preview {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #edf2f7;
+      border-radius: var(--rounded);
+      border: 1px solid #cbd5e0;
+    }
+
+    .url-preview a {
+      color: var(--primary-red);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .url-preview a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>URL Encoder/Decoder</h1>
+    
+    <div class="calculator-info">
+      <h3>Encode and decode URLs safely:</h3>
+      <ul>
+        <li>Encode special characters for URLs</li>
+        <li>Decode URL-encoded strings</li>
+        <li>Handle full URLs and URL components</li>
+        <li>Real-time encoding statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="urlInput">Enter URL or Text</label>
+        <div 
+          class="text-area" 
+          id="urlInput" 
+          contenteditable="true" 
+          placeholder="Enter URL to encode or URL-encoded string to decode..."
+        ></div>
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <input type="checkbox" id="fullUrl" checked>
+          <label class="option-label" for="fullUrl">Process as Full URL</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="processOnType">
+          <label class="option-label" for="processOnType">Process as you type</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button button-encode" onclick="encodeURL()">
+        <i class="fas fa-link"></i> Encode URL
+      </button>
+      <button class="button button-decode" onclick="decodeURL()">
+        <i class="fas fa-unlink"></i> Decode URL
+      </button>
+      <button class="button button-secondary" onclick="encodeFullURL()">
+        <i class="fas fa-globe"></i> Encode Full URL
+      </button>
+      <button class="button button-secondary" onclick="decodeFullURL()">
+        <i class="fas fa-code"></i> Decode Full URL
+      </button>
+      <button class="button button-clear" onclick="clearURL()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyResult()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="process-badge" id="processBadge">
+        <i class="fas fa-link"></i> URL Encoded
+      </div>
+      
+      <div class="result-title" id="resultTitle">URL Encoding Result</div>
+      
+      <div class="url-display" id="urlDisplay">
+        Your URL encoded/decoded result will appear here...
+      </div>
+
+      <div class="url-preview" id="urlPreview" style="display: none;">
+        <strong>URL Preview:</strong>
+        <div id="previewLink"></div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="inputSize">0</div>
+          <div class="stat-label">Input Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="outputSize">0</div>
+          <div class="stat-label">Output Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="encodedChars">0</div>
+          <div class="stat-label">Encoded Chars</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="processTime">0ms</div>
+          <div class="stat-label">Process Time</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> <span id="processInfo">Encoded URL components</span></p>
+        <p><i class="fas fa-percentage"></i> <span id="encodingInfo">0% of characters were encoded</span></p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalInput = '';
+    let processedOutput = '';
+    let isEncoded = false;
+
+    function getInputContent() {
+      return document.getElementById("urlInput").innerText;
+    }
+
+    function updateStats(input, output, processType, processTime, encodedCount = 0) {
+      const inputSize = input.length;
+      const outputSize = output.length;
+      const encodingPercentage = inputSize > 0 ? Math.round((encodedCount / inputSize) * 100) : 0;
+      
+      document.getElementById("inputSize").textContent = formatBytes(inputSize);
+      document.getElementById("outputSize").textContent = formatBytes(outputSize);
+      document.getElementById("encodedChars").textContent = encodedCount;
+      document.getElementById("processTime").textContent = processTime + 'ms';
+      
+      document.getElementById("processInfo").textContent = 
+        processType === 'encode' ? 
+        'Encoded URL components for safe transmission' : 
+        'Decoded URL-encoded string to original text';
+      
+      document.getElementById("encodingInfo").textContent = 
+        processType === 'encode' ?
+        `${encodingPercentage}% of characters were encoded` :
+        'All URL-encoded characters were decoded';
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function countEncodedCharacters(input, output) {
+      let count = 0;
+      for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        if (char !== '%' && output.includes(encodeURIComponent(char))) {
+          count++;
+        }
+      }
+      return count;
+    }
+
+    function encodeURL() {
+      const startTime = performance.now();
+      originalInput = getInputContent().trim();
+      
+      if (!originalInput) {
+        showError("Please enter some text to encode.");
+        return;
+      }
+      
+      try {
+        const encoded = encodeURIComponent(originalInput);
+        processedOutput = encoded;
+        
+        document.getElementById("urlDisplay").textContent = processedOutput;
+        document.getElementById("resultTitle").textContent = "URL Encoded";
+        document.getElementById("processBadge").className = "process-badge badge-encode";
+        document.getElementById("processBadge").innerHTML = '<i class="fas fa-link"></i> URL Encoded';
+        document.getElementById("summary").className = "summary";
+        document.getElementById("urlPreview").style.display = 'none';
+        
+        const processTime = Math.round(performance.now() - startTime);
+        const encodedCount = countEncodedCharacters(originalInput, processedOutput);
+        updateStats(originalInput, processedOutput, 'encode', processTime, encodedCount);
+        
+        isEncoded = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Error encoding URL: " + e.message);
+      }
+    }
+
+    function decodeURL() {
+      const startTime = performance.now();
+      originalInput = getInputContent().trim();
+      
+      if (!originalInput) {
+        showError("Please enter a URL-encoded string to decode.");
+        return;
+      }
+      
+      try {
+        const decoded = decodeURIComponent(originalInput);
+        processedOutput = decoded;
+        
+        document.getElementById("urlDisplay").textContent = processedOutput;
+        document.getElementById("resultTitle").textContent = "URL Decoded";
+        document.getElementById("processBadge").className = "process-badge badge-decode";
+        document.getElementById("processBadge").innerHTML = '<i class="fas fa-unlink"></i> URL Decoded';
+        document.getElementById("summary").className = "summary";
+        
+        // Show URL preview if it looks like a URL
+        if (isValidURL(decoded)) {
+          document.getElementById("urlPreview").style.display = 'block';
+          document.getElementById("previewLink").innerHTML = `<a href="${decoded}" target="_blank">${decoded}</a>`;
+        } else {
+          document.getElementById("urlPreview").style.display = 'none';
+        }
+        
+        const processTime = Math.round(performance.now() - startTime);
+        updateStats(originalInput, processedOutput, 'decode', processTime);
+        
+        isEncoded = false;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid URL-encoded string: " + e.message);
+      }
+    }
+
+    function encodeFullURL() {
+      const startTime = performance.now();
+      originalInput = getInputContent().trim();
+      
+      if (!originalInput) {
+        showError("Please enter a URL to encode.");
+        return;
+      }
+      
+      try {
+        const encoded = encodeURI(originalInput);
+        processedOutput = encoded;
+        
+        document.getElementById("urlDisplay").textContent = processedOutput;
+        document.getElementById("resultTitle").textContent = "Full URL Encoded";
+        document.getElementById("processBadge").className = "process-badge badge-encode";
+        document.getElementById("processBadge").innerHTML = '<i class="fas fa-globe"></i> Full URL Encoded';
+        document.getElementById("summary").className = "summary";
+        document.getElementById("urlPreview").style.display = 'block';
+        document.getElementById("previewLink").innerHTML = `<a href="${encoded}" target="_blank">${encoded}</a>`;
+        
+        const processTime = Math.round(performance.now() - startTime);
+        const encodedCount = countEncodedCharacters(originalInput, processedOutput);
+        updateStats(originalInput, processedOutput, 'encode', processTime, encodedCount);
+        
+        isEncoded = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Error encoding full URL: " + e.message);
+      }
+    }
+
+    function decodeFullURL() {
+      const startTime = performance.now();
+      originalInput = getInputContent().trim();
+      
+      if (!originalInput) {
+        showError("Please enter a URL-encoded string to decode.");
+        return;
+      }
+      
+      try {
+        const decoded = decodeURI(originalInput);
+        processedOutput = decoded;
+        
+        document.getElementById("urlDisplay").textContent = processedOutput;
+        document.getElementById("resultTitle").textContent = "Full URL Decoded";
+        document.getElementById("processBadge").className = "process-badge badge-decode";
+        document.getElementById("processBadge").innerHTML = '<i class="fas fa-code"></i> Full URL Decoded';
+        document.getElementById("summary").className = "summary";
+        document.getElementById("urlPreview").style.display = 'block';
+        document.getElementById("previewLink").innerHTML = `<a href="${decoded}" target="_blank">${decoded}</a>`;
+        
+        const processTime = Math.round(performance.now() - startTime);
+        updateStats(originalInput, processedOutput, 'decode', processTime);
+        
+        isEncoded = false;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid URL-encoded string: " + e.message);
+      }
+    }
+
+    function isValidURL(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function clearURL() {
+      document.getElementById("urlInput").innerText = '';
+      document.getElementById("urlDisplay").textContent = 'Your URL encoded/decoded result will appear here...';
+      document.getElementById("urlDisplay").className = "url-display";
+      document.getElementById("urlPreview").style.display = 'none';
+      document.getElementById("resultSection").style.display = 'none';
+      originalInput = '';
+      processedOutput = '';
+      isEncoded = false;
+    }
+
+    function copyResult() {
+      const text = document.getElementById("urlDisplay").textContent;
+      if (text && text !== 'Your URL encoded/decoded result will appear here...') {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('URL result copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy result: ', err);
+          alert('Failed to copy result to clipboard.');
+        });
+      } else {
+        alert('Please encode or decode a URL first.');
+      }
+    }
+
+    function showResult() {
+      document.getElementById("resultSection").style.display = 'block';
+      document.getElementById("urlDisplay").className = "url-display";
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function showError(message) {
+      document.getElementById("urlDisplay").textContent = message;
+      document.getElementById("urlDisplay").className = "error-display";
+      document.getElementById("resultTitle").textContent = "Processing Error";
+      document.getElementById("processBadge").className = "process-badge badge-encode";
+      document.getElementById("processBadge").innerHTML = '<i class="fas fa-exclamation-circle"></i> Processing Error';
+      document.getElementById("summary").className = "summary error-summary";
+      document.getElementById("urlPreview").style.display = 'none';
+      
+      document.getElementById("inputSize").textContent = '0 B';
+      document.getElementById("outputSize").textContent = '0 B';
+      document.getElementById("encodedChars").textContent = '0';
+      document.getElementById("processTime").textContent = '0ms';
+      
+      showResult();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const urlInput = document.getElementById("urlInput");
+      urlInput.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      urlInput.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Auto-process as user types if enabled
+      const processCheckbox = document.getElementById("processOnType");
+      let typingTimer;
+      
+      urlInput.addEventListener('input', function() {
+        if (processCheckbox.checked) {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(() => {
+            const fullUrl = document.getElementById("fullUrl").checked;
+            if (fullUrl) {
+              encodeFullURL();
+            } else {
+              encodeURL();
+            }
+          }, 1000);
+        }
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
