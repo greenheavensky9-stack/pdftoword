@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Color Blindness Simulator - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .upload-section {
+      margin: 1.5rem 0;
+    }
+
+    .file-input-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .file-input:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    .file-input::file-selector-button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .file-input::file-selector-button:hover {
+      background-color: var(--dark-red);
+    }
+
+    .controls-section {
+      margin: 1.5rem 0;
+    }
+
+    .vision-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .vision-type {
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      border: 2px solid var(--light-red);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .vision-type:hover {
+      border-color: var(--primary-red);
+      transform: translateY(-2px);
+    }
+
+    .vision-type.active {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border-color: var(--primary-red);
+    }
+
+    .vision-label {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .vision-description {
+      font-size: 0.85rem;
+      color: inherit;
+      opacity: 0.8;
+    }
+
+    .preview-section {
+      margin: 1.5rem 0;
+      display: none;
+    }
+
+    .preview-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .comparison-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .image-card {
+      background: var(--white);
+      border-radius: var(--rounded);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .image-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-label {
+      padding: 1rem;
+      background: var(--light-red);
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 1px solid var(--light-red);
+    }
+
+    .image-preview {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.5s ease;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .statistics {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .statistics-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .accessibility-info {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .accessibility-title {
+      font-weight: 600;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .recommendation-item {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      margin-bottom: 0.75rem;
+      text-align: left;
+      border-left: 4px solid #4caf50;
+    }
+
+    .recommendation-text {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-red);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .vision-types {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .image-preview {
+        height: 200px;
+      }
+      
+      .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Color Blindness Simulator</h1>
+    
+    <div class="calculator-info">
+      <h3>Test your designs for color accessibility:</h3>
+      <ul>
+        <li>Simulate different types of color vision deficiencies</li>
+        <li>Compare original and simulated views side by side</li>
+        <li>Understand how colors appear to people with color blindness</li>
+        <li>Get accessibility recommendations</li>
+      </ul>
+    </div>
+    
+    <div class="upload-section">
+      <div class="file-input-container">
+        <input type="file" id="imageInput" class="file-input" accept="image/*" />
+      </div>
+      
+      <div class="button-group">
+        <button class="button button-secondary" onclick="loadSampleImage()">
+          <i class="fas fa-image"></i> Load Sample Image
+        </button>
+        <button class="button button-clear" onclick="clearImage()">
+          <i class="fas fa-eraser"></i> Clear Image
+        </button>
+      </div>
+    </div>
+    
+    <div class="controls-section">
+      <div class="vision-types">
+        <div class="vision-type active" data-type="normal" onclick="setVisionType('normal')">
+          <div class="vision-label">Normal Vision</div>
+          <div class="vision-description">Standard color perception</div>
+        </div>
+        <div class="vision-type" data-type="deuteranopia" onclick="setVisionType('deuteranopia')">
+          <div class="vision-label">Deuteranopia</div>
+          <div class="vision-description">Red-Green color blindness</div>
+        </div>
+        <div class="vision-type" data-type="protanopia" onclick="setVisionType('protanopia')">
+          <div class="vision-label">Protanopia</div>
+          <div class="vision-description">Red-Green color blindness</div>
+        </div>
+        <div class="vision-type" data-type="tritanopia" onclick="setVisionType('tritanopia')">
+          <div class="vision-label">Tritanopia</div>
+          <div class="vision-description">Blue-Yellow color blindness</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-section" id="previewSection">
+      <div class="preview-title">Color Vision Comparison</div>
+      
+      <div class="comparison-container">
+        <div class="image-card">
+          <div class="image-label">Original Image</div>
+          <img id="originalPreview" class="image-preview" src="" alt="Original image">
+        </div>
+        
+        <div class="image-card">
+          <div class="image-label" id="simulatedLabel">Simulated View</div>
+          <img id="simulatedPreview" class="image-preview" src="" alt="Simulated color blindness view">
+        </div>
+      </div>
+      
+      <div class="statistics">
+        <div class="statistics-title">Color Accessibility</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="affectedPopulation">8%</div>
+            <div class="stat-label">People Affected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="commonType">Deuteranopia</div>
+            <div class="stat-label">Most Common Type</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="malePrevalence">1 in 12</div>
+            <div class="stat-label">Male Prevalence</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="femalePrevalence">1 in 200</div>
+            <div class="stat-label">Female Prevalence</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="accessibility-info">
+        <div class="accessibility-title">Accessibility Recommendations</div>
+        <div class="recommendation-item">
+          <div class="recommendation-text" id="recommendationText">
+            Use high contrast ratios and don't rely solely on color to convey information.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> Operation completed!
+  </div>
+
+  <script>
+    let currentVisionType = 'normal';
+    let currentImage = null;
+
+    // Sample image data URL (a small placeholder)
+    const sampleImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjVGN0ZBIi8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI4MCIgZmlsbD0iI0U3NEMzQyIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjE1MCIgcj0iNjAiIGZpbGw9IiMzNDk4REIiLz4KICA8cmVjdCB4PSIyNTAiIHk9IjUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzJFRDdDNyIvPgogIDx0ZXh0IHg9IjIwMCIgeT0iMjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiMxRTFKMkIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNvbG9yIFRlc3QgSW1hZ2U8L3RleHQ+Cjwvc3ZnPg==';
+
+    function setVisionType(type) {
+      currentVisionType = type;
+      
+      // Update active state
+      document.querySelectorAll('.vision-type').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`.vision-type[data-type="${type}"]`).classList.add('active');
+      
+      // Update simulated label
+      const typeLabels = {
+        normal: 'Normal Vision',
+        deuteranopia: 'Deuteranopia Simulation',
+        protanopia: 'Protanopia Simulation',
+        tritanopia: 'Tritanopia Simulation'
+      };
+      document.getElementById('simulatedLabel').textContent = typeLabels[type];
+      
+      // Update statistics
+      updateStatistics(type);
+      
+      // Apply filter if image is loaded
+      if (currentImage) {
+        applyColorBlindnessFilter();
+      }
+    }
+
+    function applyColorBlindnessFilter() {
+      const simulatedPreview = document.getElementById('simulatedPreview');
+      
+      // Reset filter first
+      simulatedPreview.style.filter = 'none';
+      
+      switch (currentVisionType) {
+        case 'normal':
+          simulatedPreview.style.filter = 'none';
+          break;
+        case 'deuteranopia':
+          // More accurate deuteranopia simulation
+          simulatedPreview.style.filter = 'sepia(0.3) hue-rotate(45deg) saturate(1.5)';
+          break;
+        case 'protanopia':
+          // More accurate protanopia simulation
+          simulatedPreview.style.filter = 'sepia(0.3) hue-rotate(-45deg) saturate(1.5)';
+          break;
+        case 'tritanopia':
+          // More accurate tritanopia simulation
+          simulatedPreview.style.filter = 'sepia(0.3) hue-rotate(150deg) saturate(1.2)';
+          break;
+        default:
+          simulatedPreview.style.filter = 'none';
+      }
+    }
+
+    function updateStatistics(type) {
+      const stats = {
+        deuteranopia: {
+          population: '5.6%',
+          common: 'Deuteranopia',
+          male: '1 in 12',
+          female: '1 in 200'
+        },
+        protanopia: {
+          population: '2.7%',
+          common: 'Protanopia',
+          male: '1 in 20',
+          female: '1 in 400'
+        },
+        tritanopia: {
+          population: '0.4%',
+          common: 'Tritanopia',
+          male: '1 in 250',
+          female: '1 in 250'
+        },
+        normal: {
+          population: '8%',
+          common: 'Deuteranopia',
+          male: '1 in 12',
+          female: '1 in 200'
+        }
+      };
+      
+      const stat = stats[type] || stats.normal;
+      
+      document.getElementById('affectedPopulation').textContent = stat.population;
+      document.getElementById('commonType').textContent = stat.common;
+      document.getElementById('malePrevalence').textContent = stat.male;
+      document.getElementById('femalePrevalence').textContent = stat.female;
+      
+      // Update recommendations based on type
+      updateRecommendations(type);
+    }
+
+    function updateRecommendations(type) {
+      const recommendationElement = document.getElementById('recommendationText');
+      
+      const recommendations = {
+        normal: "Upload an image to see how it appears to people with different types of color vision deficiencies.",
+        deuteranopia: "Use texture or patterns in addition to color. Ensure sufficient contrast between red and green elements.",
+        protanopia: "Avoid red-green color combinations. Use blue and yellow as alternative distinguishing colors.",
+        tritanopia: "Use high contrast for blue-yellow elements. Consider using purple or magenta instead of blue."
+      };
+      
+      recommendationElement.textContent = recommendations[type] || recommendations.normal;
+    }
+
+    function loadSampleImage() {
+      const originalPreview = document.getElementById('originalPreview');
+      const simulatedPreview = document.getElementById('simulatedPreview');
+      
+      originalPreview.src = sampleImage;
+      simulatedPreview.src = sampleImage;
+      currentImage = sampleImage;
+      
+      document.getElementById('previewSection').style.display = 'block';
+      applyColorBlindnessFilter();
+      showNotification("Sample image loaded!");
+    }
+
+    function clearImage() {
+      const originalPreview = document.getElementById('originalPreview');
+      const simulatedPreview = document.getElementById('simulatedPreview');
+      const fileInput = document.getElementById('imageInput');
+      
+      originalPreview.src = '';
+      simulatedPreview.src = '';
+      fileInput.value = '';
+      currentImage = null;
+      
+      document.getElementById('previewSection').style.display = 'none';
+      showNotification("Image cleared!");
+    }
+
+    function showNotification(message, isError = false) {
+      const copyNotification = document.getElementById("copyNotification");
+      copyNotification.textContent = message;
+      copyNotification.style.background = isError ? '#e53e3e' : 'var(--primary-red)';
+      copyNotification.classList.add('show');
+      
+      setTimeout(() => {
+        copyNotification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle file upload
+      const imageInput = document.getElementById('imageInput');
+      const originalPreview = document.getElementById('originalPreview');
+      const simulatedPreview = document.getElementById('simulatedPreview');
+      
+      imageInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Check if file is an image
+        if (!file.type.match('image.*')) {
+          showNotification("Please select a valid image file.", true);
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          originalPreview.src = event.target.result;
+          simulatedPreview.src = event.target.result;
+          currentImage = event.target.result;
+          
+          document.getElementById('previewSection').style.display = 'block';
+          applyColorBlindnessFilter();
+          showNotification("Image uploaded successfully!");
+        };
+        reader.onerror = function() {
+          showNotification("Error loading image. Please try another file.", true);
+        };
+        reader.readAsDataURL(file);
+      });
+      
+      // Initialize with sample data
+      updateStatistics('normal');
+      updateRecommendations('normal');
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
