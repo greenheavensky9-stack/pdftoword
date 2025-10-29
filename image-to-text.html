@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Text Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-section {
+      background: var(--white);
+      border: 2px dashed var(--light-red);
+      padding: 2rem;
+      text-align: center;
+      border-radius: var(--rounded);
+      transition: var(--transition);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-section:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    .upload-label {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-block;
+    }
+
+    .upload-label:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .preview-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      display: none;
+    }
+
+    .preview-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: var(--rounded);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--light-red);
+    }
+
+    .output-section {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .output-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    #output {
+      background: var(--light-red);
+      padding: 1rem;
+      border-radius: var(--rounded);
+      white-space: pre-wrap;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--light-red);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      flex: 1;
+    }
+
+    button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .progress-container {
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--light-red);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-red);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    .language-selector {
+      margin-bottom: 1.5rem;
+    }
+
+    .language-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    select {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .upload-section {
+        padding: 1.5rem;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image to Text (OCR)</h1>
+    
+    <div class="language-selector">
+      <label class="language-label" for="languageSelect">Select Language</label>
+      <select id="languageSelect">
+        <option value="eng">English</option>
+        <option value="spa">Spanish</option>
+        <option value="fre">French</option>
+        <option value="deu">German</option>
+        <option value="ita">Italian</option>
+        <option value="por">Portuguese</option>
+        <option value="rus">Russian</option>
+        <option value="chi_sim">Chinese (Simplified)</option>
+        <option value="jpn">Japanese</option>
+        <option value="kor">Korean</option>
+      </select>
+    </div>
+    
+    <div class="upload-section">
+      <label for="imageInput" class="upload-label">
+        <i class="fas fa-cloud-upload-alt"></i> Upload Image
+      </label>
+      <input type="file" id="imageInput" accept="image/*" />
+      <div class="file-info" id="fileInfo">
+        <p><strong>File Name:</strong> <span id="fileName"></span></p>
+        <p><strong>File Size:</strong> <span id="fileSize"></span></p>
+      </div>
+    </div>
+    
+    <div class="preview-container" id="previewContainer">
+      <label class="preview-label">Image Preview:</label>
+      <img id="imagePreview" alt="Image Preview" />
+    </div>
+    
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Initializing...</div>
+    </div>
+    
+    <div class="output-section" id="outputSection">
+      <label class="output-label">Extracted Text:</label>
+      <div id="output"></div>
+      <div class="action-buttons">
+        <button id="copyBtn" onclick="copyText()">
+          <i class="fas fa-copy"></i> Copy Text
+        </button>
+        <button id="clearBtn" onclick="clearAll()">
+          <i class="fas fa-trash"></i> Clear All
+        </button>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const outputSection = document.getElementById('outputSection');
+    const languageSelect = document.getElementById('languageSelect');
+
+    imageInput.addEventListener('change', async () => {
+      if (imageInput.files.length === 0) return;
+
+      const file = imageInput.files[0];
+      
+      // Update file info
+      fileName.textContent = file.name;
+      fileSize.textContent = formatFileSize(file.size);
+      fileInfo.style.display = 'block';
+      
+      // Show image preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        imagePreview.src = e.target.result;
+        previewContainer.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+
+      // Start OCR processing
+      await processImage(file);
+    });
+
+    async function processImage(file) {
+      outputSection.style.display = 'block';
+      progressContainer.style.display = 'block';
+      output.textContent = 'Processing...';
+      copyBtn.disabled = true;
+
+      try {
+        const selectedLanguage = languageSelect.value;
+        
+        const result = await Tesseract.recognize(
+          file,
+          selectedLanguage,
+          {
+            logger: progress => {
+              if (progress.status === 'recognizing text') {
+                const percentage = Math.round(progress.progress * 100);
+                progressFill.style.width = `${percentage}%`;
+                progressText.textContent = `Processing: ${percentage}%`;
+              }
+            }
+          }
+        );
+
+        output.textContent = result.data.text || 'No text found in the image.';
+        copyBtn.disabled = false;
+        progressContainer.style.display = 'none';
+        
+      } catch (err) {
+        output.textContent = 'Error processing image. Please try again with a clearer image.';
+        console.error(err);
+        progressContainer.style.display = 'none';
+      }
+    }
+
+    function copyText() {
+      const text = output.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        // Show temporary success message
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        copyBtn.style.backgroundColor = '#4CAF50';
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.style.backgroundColor = '';
+        }, 2000);
+      }).catch(err => {
+        alert('Failed to copy text. Please try again.');
+        console.error('Copy failed:', err);
+      });
+    }
+
+    function clearAll() {
+      imageInput.value = '';
+      output.textContent = '';
+      outputSection.style.display = 'none';
+      previewContainer.style.display = 'none';
+      fileInfo.style.display = 'none';
+      progressContainer.style.display = 'none';
+      copyBtn.disabled = true;
+    }
+
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
