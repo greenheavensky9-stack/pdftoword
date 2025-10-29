@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text Reversal Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 150px;
+      font-family: inherit;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .reversal-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .reversed-value {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-family: monospace;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-item input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-red);
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Text Reversal Tool</h1>
+    
+    <div class="calculator-info">
+      <h3>Reverse your text in multiple ways:</h3>
+      <ul>
+        <li>Character-by-character reversal</li>
+        <li>Word order reversal</li>
+        <li>Line order reversal</li>
+        <li>Real-time text statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="textBox">Enter Your Text</label>
+        <div 
+          class="text-area" 
+          id="textBox" 
+          contenteditable="true" 
+          placeholder="Paste or type your text here to reverse it..."
+        ></div>
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <input type="radio" id="reverseChars" name="reverseType" value="chars" checked>
+          <label class="option-label" for="reverseChars">Reverse Characters</label>
+        </div>
+        <div class="option-item">
+          <input type="radio" id="reverseWords" name="reverseType" value="words">
+          <label class="option-label" for="reverseWords">Reverse Word Order</label>
+        </div>
+        <div class="option-item">
+          <input type="radio" id="reverseLines" name="reverseType" value="lines">
+          <label class="option-label" for="reverseLines">Reverse Line Order</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button" onclick="reverseText()">
+        <i class="fas fa-exchange-alt"></i> Reverse Text
+      </button>
+      <button class="button button-secondary" onclick="toggleReverse()">
+        <i class="fas fa-sync-alt"></i> Toggle Original/Reversed
+      </button>
+      <button class="button button-clear" onclick="clearText()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyReversed()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title">Reversed Text</div>
+      
+      <div class="reversal-display">
+        <div class="reversed-value" id="reversedValue">Your reversed text will appear here...</div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="originalLength">0</div>
+          <div class="stat-label">Original Characters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="reversedLength">0</div>
+          <div class="stat-label">Reversed Characters</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> Reversed <strong id="reversalType">character order</strong> of your text</p>
+        <p><i class="fas fa-history"></i> Use "Toggle" button to switch between original and reversed views</p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalText = '';
+    let reversedText = '';
+    let isShowingReversed = true;
+
+    function getTextContent() {
+      return document.getElementById("textBox").innerText.trim();
+    }
+
+    function updateStats(originalLength, reversedLength) {
+      document.getElementById("originalLength").textContent = originalLength;
+      document.getElementById("reversedLength").textContent = reversedLength;
+    }
+
+    function getReversalType() {
+      const selected = document.querySelector('input[name="reverseType"]:checked');
+      return selected ? selected.value : 'chars';
+    }
+
+    function reverseText() {
+      originalText = getTextContent();
+      
+      if (!originalText) {
+        showResult("Please enter some text to reverse.");
+        return;
+      }
+      
+      const reversalType = getReversalType();
+      let reversalTypeText = '';
+      
+      switch(reversalType) {
+        case 'chars':
+          reversedText = originalText.split('').reverse().join('');
+          reversalTypeText = 'character order';
+          break;
+        case 'words':
+          reversedText = originalText.split(/\s+/).reverse().join(' ');
+          reversalTypeText = 'word order';
+          break;
+        case 'lines':
+          reversedText = originalText.split('\n').reverse().join('\n');
+          reversalTypeText = 'line order';
+          break;
+      }
+      
+      document.getElementById("reversedValue").textContent = reversedText;
+      document.getElementById("reversalType").textContent = reversalTypeText;
+      updateStats(originalText.length, reversedText.length);
+      
+      isShowingReversed = true;
+      document.getElementById("resultSection").style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function toggleReverse() {
+      if (!originalText) {
+        reverseText();
+        return;
+      }
+      
+      if (isShowingReversed) {
+        document.getElementById("reversedValue").textContent = originalText;
+        document.getElementById("resultTitle").textContent = "Original Text";
+        isShowingReversed = false;
+      } else {
+        document.getElementById("reversedValue").textContent = reversedText;
+        document.getElementById("resultTitle").textContent = "Reversed Text";
+        isShowingReversed = true;
+      }
+    }
+
+    function clearText() {
+      document.getElementById("textBox").innerText = '';
+      document.getElementById("reversedValue").textContent = 'Your reversed text will appear here...';
+      document.getElementById("resultSection").style.display = 'none';
+      originalText = '';
+      reversedText = '';
+      isShowingReversed = true;
+    }
+
+    function copyReversed() {
+      const text = document.getElementById("reversedValue").textContent;
+      if (text && text !== 'Your reversed text will appear here...') {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Reversed text copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+          alert('Failed to copy text to clipboard.');
+        });
+      } else {
+        alert('Please reverse some text first.');
+      }
+    }
+
+    function showResult(message) {
+      document.getElementById("reversedValue").textContent = message;
+      document.getElementById("resultSection").style.display = 'block';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textBox = document.getElementById("textBox");
+      textBox.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textBox.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Auto-reverse as user types (with debounce)
+      let typingTimer;
+      const doneTypingInterval = 1500; // 1.5 seconds
+      
+      textBox.addEventListener('input', function() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(reverseText, doneTypingInterval);
+      });
+      
+      // Update reversal when type changes
+      const radioButtons = document.querySelectorAll('input[name="reverseType"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (originalText) {
+            reverseText();
+          }
+        });
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
