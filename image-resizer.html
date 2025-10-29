@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Resizer Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    #upload {
+      display: none;
+    }
+
+    .dimension-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dimension-control {
+      flex: 1;
+    }
+
+    .dimension-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    input[type="number"] {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .preview-container {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .preview-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    canvas {
+      max-width: 100%;
+      border-radius: var(--rounded);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-red);
+      color: var(--white);
+      text-align: center;
+      border-radius: var(--rounded);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      width: 100%;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    .download-btn:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .dimension-info {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .dimension-controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Resizer</h1>
+    
+    <label class="file-input-label" for="upload">
+      <i class="fas fa-cloud-upload-alt"></i> Choose an image to resize
+    </label>
+    <input type="file" id="upload" accept="image/*" />
+    
+    <div id="fileInfo" class="file-info">
+      <p><strong>File Name:</strong> <span id="fileName"></span></p>
+      <p><strong>Original Dimensions:</strong> <span id="originalDimensions"></span></p>
+    </div>
+    
+    <div class="dimension-controls">
+      <div class="dimension-control">
+        <label class="dimension-label" for="width">Width (px)</label>
+        <input type="number" id="width" placeholder="Width" min="1" />
+        <div class="dimension-info">Enter width in pixels</div>
+      </div>
+      
+      <div class="dimension-control">
+        <label class="dimension-label" for="height">Height (px)</label>
+        <input type="number" id="height" placeholder="Height" min="1" />
+        <div class="dimension-info">Enter height in pixels</div>
+      </div>
+    </div>
+    
+    <button id="resizeBtn" onclick="resizeImage()" disabled>Resize Image</button>
+    
+    <div class="preview-container">
+      <label class="preview-label">Resized Preview:</label>
+      <canvas id="canvas"></canvas>
+    </div>
+    
+    <a id="downloadLink" class="download-btn" download="resized-image.png">
+      <i class="fas fa-download"></i> Download Resized Image
+    </a>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalImage = new Image();
+    let originalWidth = 0;
+    let originalHeight = 0;
+
+    document.getElementById('upload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Update file input label
+      const fileLabel = document.querySelector('.file-input-label');
+      fileLabel.innerHTML = `<i class="fas fa-check"></i> ${file.name}`;
+      fileLabel.style.borderColor = '#4CAF50';
+      fileLabel.style.color = '#4CAF50';
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        originalImage.src = e.target.result;
+        
+        originalImage.onload = function() {
+          originalWidth = originalImage.width;
+          originalHeight = originalImage.height;
+          
+          // Update file info
+          document.getElementById('fileName').textContent = file.name;
+          document.getElementById('originalDimensions').textContent = `${originalWidth} × ${originalHeight} px`;
+          document.getElementById('fileInfo').style.display = 'block';
+          
+          // Enable resize button
+          document.getElementById('resizeBtn').disabled = false;
+          
+          // Set default values for width and height
+          document.getElementById('width').value = originalWidth;
+          document.getElementById('height').value = originalHeight;
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function resizeImage() {
+      const widthInput = document.getElementById('width');
+      const heightInput = document.getElementById('height');
+      const width = parseInt(widthInput.value);
+      const height = parseInt(heightInput.value);
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const downloadLink = document.getElementById('downloadLink');
+
+      if (!width || !height || isNaN(width) || isNaN(height)) {
+        alert("Please enter valid width and height.");
+        return;
+      }
+
+      if (width <= 0 || height <= 0) {
+        alert("Width and height must be positive values.");
+        return;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.display = 'block';
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(originalImage, 0, 0, width, height);
+
+      downloadLink.href = canvas.toDataURL();
+      downloadLink.style.display = 'block';
+    }
+
+    // Maintain aspect ratio when one dimension is changed
+    let aspectRatio = 0;
+    
+    document.getElementById('width').addEventListener('input', function() {
+      if (originalWidth > 0 && originalHeight > 0 && aspectRatio === 0) {
+        aspectRatio = originalWidth / originalHeight;
+      }
+      
+      const width = parseInt(this.value);
+      if (width > 0 && aspectRatio > 0) {
+        document.getElementById('height').value = Math.round(width / aspectRatio);
+      }
+    });
+    
+    document.getElementById('height').addEventListener('input', function() {
+      if (originalWidth > 0 && originalHeight > 0 && aspectRatio === 0) {
+        aspectRatio = originalWidth / originalHeight;
+      }
+      
+      const height = parseInt(this.value);
+      if (height > 0 && aspectRatio > 0) {
+        document.getElementById('width').value = Math.round(height * aspectRatio);
+      }
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
