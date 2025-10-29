@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Cropper Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    #upload {
+      display: none;
+    }
+
+    .aspect-control {
+      margin-bottom: 1.5rem;
+    }
+
+    .aspect-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    select {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .preview-container {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .preview-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    canvas {
+      max-width: 100%;
+      border-radius: var(--rounded);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: none;
+      border: 1px solid var(--light-red);
+    }
+
+    button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-red);
+      color: var(--white);
+      text-align: center;
+      border-radius: var(--rounded);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      width: 100%;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    .download-btn:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .crop-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .crop-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .aspect-info {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Cropper</h1>
+    
+    <label class="file-input-label" for="upload">
+      <i class="fas fa-cloud-upload-alt"></i> Choose an image to crop
+    </label>
+    <input type="file" id="upload" accept="image/*" />
+    
+    <div id="fileInfo" class="file-info">
+      <p><strong>File Name:</strong> <span id="fileName"></span></p>
+      <p><strong>Original Dimensions:</strong> <span id="originalDimensions"></span></p>
+    </div>
+    
+    <div class="aspect-control">
+      <label class="aspect-label" for="aspectRatio">Aspect Ratio</label>
+      <select id="aspectRatio">
+        <option value="1">1:1 (Square)</option>
+        <option value="16/9">16:9 (Widescreen)</option>
+        <option value="4/3">4:3 (Standard)</option>
+        <option value="3/2">3:2 (Classic)</option>
+        <option value="21/9">21:9 (Ultrawide)</option>
+        <option value="9/16">9:16 (Portrait)</option>
+        <option value="free">Free Form</option>
+      </select>
+      <div class="aspect-info">Select the desired aspect ratio for cropping</div>
+    </div>
+    
+    <div class="dimension-controls" style="display: none;">
+      <div style="display: flex; gap: 15px; margin-bottom: 1rem;">
+        <div style="flex: 1;">
+          <label class="aspect-label" for="customWidth">Width (px)</label>
+          <input type="number" id="customWidth" placeholder="Width" min="1" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-red); border-radius: var(--rounded);" />
+        </div>
+        
+        <div style="flex: 1;">
+          <label class="aspect-label" for="customHeight">Height (px)</label>
+          <input type="number" id="customHeight" placeholder="Height" min="1" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-red); border-radius: var(--rounded);" />
+        </div>
+      </div>
+    </div>
+    
+    <button id="cropBtn" onclick="cropImage()" disabled>Apply Aspect Ratio</button>
+    
+    <div class="preview-container">
+      <label class="preview-label">Cropped Preview:</label>
+      <canvas id="canvas"></canvas>
+    </div>
+    
+    <div id="cropInfo" class="crop-info">
+      <p><strong>Cropped Dimensions:</strong> <span id="croppedDimensions"></span></p>
+      <p><strong>Aspect Ratio:</strong> <span id="appliedAspectRatio"></span></p>
+    </div>
+    
+    <a id="downloadLink" class="download-btn" download="cropped-image.png">
+      <i class="fas fa-download"></i> Download Cropped Image
+    </a>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalImage = new Image();
+    let originalWidth = 0;
+    let originalHeight = 0;
+
+    document.getElementById('upload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Update file input label
+      const fileLabel = document.querySelector('.file-input-label');
+      fileLabel.innerHTML = `<i class="fas fa-check"></i> ${file.name}`;
+      fileLabel.style.borderColor = '#4CAF50';
+      fileLabel.style.color = '#4CAF50';
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        originalImage.src = e.target.result;
+        
+        originalImage.onload = function() {
+          originalWidth = originalImage.width;
+          originalHeight = originalImage.height;
+          
+          // Update file info
+          document.getElementById('fileName').textContent = file.name;
+          document.getElementById('originalDimensions').textContent = `${originalWidth} × ${originalHeight} px`;
+          document.getElementById('fileInfo').style.display = 'block';
+          
+          // Enable crop button
+          document.getElementById('cropBtn').disabled = false;
+          
+          // Auto-crop with default aspect ratio
+          cropImage();
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Toggle custom dimensions when free form is selected
+    document.getElementById('aspectRatio').addEventListener('change', function() {
+      const dimensionControls = document.querySelector('.dimension-controls');
+      if (this.value === 'free') {
+        dimensionControls.style.display = 'block';
+        document.getElementById('customWidth').value = originalWidth;
+        document.getElementById('customHeight').value = originalHeight;
+      } else {
+        dimensionControls.style.display = 'none';
+      }
+      
+      // Auto-apply when an image is loaded
+      if (originalImage.src) {
+        cropImage();
+      }
+    });
+
+    function cropImage() {
+      const aspectSelect = document.getElementById('aspectRatio');
+      let aspectValue = aspectSelect.value;
+      let aspectRatio;
+      
+      if (aspectValue === 'free') {
+        const customWidth = parseInt(document.getElementById('customWidth').value);
+        const customHeight = parseInt(document.getElementById('customHeight').value);
+        
+        if (!customWidth || !customHeight || isNaN(customWidth) || isNaN(customHeight)) {
+          alert("Please enter valid width and height for free form cropping.");
+          return;
+        }
+        
+        if (customWidth <= 0 || customHeight <= 0) {
+          alert("Width and height must be positive values.");
+          return;
+        }
+        
+        aspectRatio = customWidth / customHeight;
+      } else {
+        aspectRatio = eval(aspectValue);
+      }
+
+      let newWidth = originalWidth;
+      let newHeight = Math.round(newWidth / aspectRatio);
+
+      if (newHeight > originalHeight) {
+        newHeight = originalHeight;
+        newWidth = Math.round(newHeight * aspectRatio);
+      }
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      canvas.style.display = 'block';
+
+      ctx.clearRect(0, 0, newWidth, newHeight);
+      ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+
+      // Update crop info
+      document.getElementById('croppedDimensions').textContent = `${newWidth} × ${newHeight} px`;
+      document.getElementById('appliedAspectRatio').textContent = `${newWidth}:${newHeight}`;
+      document.getElementById('cropInfo').style.display = 'block';
+
+      const downloadLink = document.getElementById('downloadLink');
+      downloadLink.href = canvas.toDataURL();
+      downloadLink.style.display = 'block';
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
