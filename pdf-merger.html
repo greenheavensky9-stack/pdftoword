@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Merger & Splitter - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+    }
+
+    .section-title {
+      color: var(--primary-red);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-section {
+      margin: 1.5rem 0;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .input-group {
+      margin: 1rem 0;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    input[type="text"] {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .input-info {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 1rem 0.5rem 0;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-btn {
+      display: none;
+      margin-top: 1.5rem;
+      text-decoration: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    .status {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border-radius: var(--rounded);
+      font-weight: 500;
+      display: none;
+    }
+
+    .status.success {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+      border: 1px solid #4caf50;
+    }
+
+    .status.error {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #f44336;
+    }
+
+    .status.processing {
+      background-color: #e3f2fd;
+      color: #1565c0;
+      border: 1px solid #2196f3;
+    }
+
+    .progress-container {
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--light-red);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-red);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .files-list {
+      margin: 1rem 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      margin-bottom: 0.5rem;
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .file-remove {
+      background: none;
+      border: none;
+      color: var(--primary-red);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      .button {
+        display: block;
+        margin: 1rem auto 0;
+        width: 100%;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF Merger & Splitter</h1>
+
+    <!-- Merger Section -->
+    <div class="section">
+      <h2 class="section-title">
+        <i class="fas fa-object-group"></i> Merge PDFs
+      </h2>
+      
+      <div class="upload-section">
+        <label for="mergeInput" class="file-input-label">
+          <i class="fas fa-cloud-upload-alt"></i> Select PDF files to merge
+        </label>
+        <input type="file" id="mergeInput" accept="application/pdf" multiple />
+        
+        <div class="files-list" id="mergeFilesList"></div>
+        
+        <div class="file-info" id="mergeFileInfo">
+          <p><strong>Selected Files:</strong> <span id="fileCount">0</span></p>
+          <p><strong>Total Size:</strong> <span id="totalSize">0 KB</span></p>
+        </div>
+      </div>
+      
+      <div class="progress-container" id="mergeProgressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="mergeProgressFill"></div>
+        </div>
+        <div class="progress-text" id="mergeProgressText">Initializing...</div>
+      </div>
+      
+      <div class="status" id="mergeStatus"></div>
+      
+      <button class="button" id="mergeBtn" disabled>
+        <i class="fas fa-object-group"></i> Merge PDFs
+      </button>
+      
+      <a id="mergeDownloadLink" class="button download-btn" download="merged.pdf">
+        <i class="fas fa-download"></i> Download Merged PDF
+      </a>
+    </div>
+
+    <!-- Splitter Section -->
+    <div class="section">
+      <h2 class="section-title">
+        <i class="fas fa-cut"></i> Split PDF
+      </h2>
+      
+      <div class="upload-section">
+        <label for="splitInput" class="file-input-label">
+          <i class="fas fa-cloud-upload-alt"></i> Select PDF file to split
+        </label>
+        <input type="file" id="splitInput" accept="application/pdf" />
+        
+        <div class="file-info" id="splitFileInfo" style="display: none;">
+          <p><strong>File Name:</strong> <span id="splitFileName"></span></p>
+          <p><strong>File Size:</strong> <span id="splitFileSize"></span></p>
+          <p><strong>Total Pages:</strong> <span id="totalPages">-</span></p>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label" for="splitPages">Pages to Extract</label>
+        <input type="text" id="splitPages" placeholder="e.g., 1,3-5,7" />
+        <div class="input-info">
+          Enter page numbers or ranges separated by commas (e.g., 1,3-5,7)
+        </div>
+      </div>
+      
+      <div class="progress-container" id="splitProgressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="splitProgressFill"></div>
+        </div>
+        <div class="progress-text" id="splitProgressText">Initializing...</div>
+      </div>
+      
+      <div class="status" id="splitStatus"></div>
+      
+      <button class="button" id="splitBtn" disabled>
+        <i class="fas fa-cut"></i> Split PDF
+      </button>
+      
+      <a id="splitDownloadLink" class="button download-btn" download="split.pdf">
+        <i class="fas fa-download"></i> Download Split PDF
+      </a>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script type="module">
+    import { PDFDocument } from 'https://cdn.skypack.dev/pdf-lib';
+
+    // Merge elements
+    const mergeInput = document.getElementById('mergeInput');
+    const mergeBtn = document.getElementById('mergeBtn');
+    const mergeDownloadLink = document.getElementById('mergeDownloadLink');
+    const mergeFilesList = document.getElementById('mergeFilesList');
+    const mergeFileInfo = document.getElementById('mergeFileInfo');
+    const fileCount = document.getElementById('fileCount');
+    const totalSize = document.getElementById('totalSize');
+    const mergeStatus = document.getElementById('mergeStatus');
+    const mergeProgressContainer = document.getElementById('mergeProgressContainer');
+    const mergeProgressFill = document.getElementById('mergeProgressFill');
+    const mergeProgressText = document.getElementById('mergeProgressText');
+
+    // Split elements
+    const splitInput = document.getElementById('splitInput');
+    const splitPages = document.getElementById('splitPages');
+    const splitBtn = document.getElementById('splitBtn');
+    const splitDownloadLink = document.getElementById('splitDownloadLink');
+    const splitFileInfo = document.getElementById('splitFileInfo');
+    const splitFileName = document.getElementById('splitFileName');
+    const splitFileSize = document.getElementById('splitFileSize');
+    const totalPages = document.getElementById('totalPages');
+    const splitStatus = document.getElementById('splitStatus');
+    const splitProgressContainer = document.getElementById('splitProgressContainer');
+    const splitProgressFill = document.getElementById('splitProgressFill');
+    const splitProgressText = document.getElementById('splitProgressText');
+
+    let mergeFiles = [];
+    let splitFile;
+
+    // Merge functionality
+    mergeInput.addEventListener('change', (e) => {
+      mergeFiles = Array.from(e.target.files);
+      updateMergeUI();
+    });
+
+    function updateMergeUI() {
+      mergeFilesList.innerHTML = '';
+      let totalFileSize = 0;
+      
+      mergeFiles.forEach((file, index) => {
+        totalFileSize += file.size;
+        
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <span class="file-name">${file.name}</span>
+          <button class="file-remove" onclick="removeMergeFile(${index})">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        mergeFilesList.appendChild(fileItem);
+      });
+      
+      fileCount.textContent = mergeFiles.length;
+      totalSize.textContent = formatFileSize(totalFileSize);
+      mergeFileInfo.style.display = mergeFiles.length > 0 ? 'block' : 'none';
+      mergeBtn.disabled = mergeFiles.length < 2;
+    }
+
+    window.removeMergeFile = function(index) {
+      mergeFiles.splice(index, 1);
+      updateMergeUI();
+    };
+
+    mergeBtn.addEventListener('click', async () => {
+      if (mergeFiles.length < 2) {
+        showStatus(mergeStatus, 'Please select at least 2 PDF files to merge.', 'error');
+        return;
+      }
+
+      mergeBtn.disabled = true;
+      mergeProgressContainer.style.display = 'block';
+      updateProgress(mergeProgressFill, mergeProgressText, 10, 'Initializing merge...');
+
+      try {
+        const mergedBytes = await mergePDFs(mergeFiles);
+        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        mergeDownloadLink.href = url;
+        mergeDownloadLink.style.display = 'inline-block';
+        showStatus(mergeStatus, 'PDFs merged successfully!', 'success');
+        
+      } catch (error) {
+        showStatus(mergeStatus, 'Merge failed. Please try again.', 'error');
+        console.error('Merge error:', error);
+      } finally {
+        mergeBtn.disabled = false;
+        mergeProgressContainer.style.display = 'none';
+      }
+    });
+
+    async function mergePDFs(files) {
+      const mergedPdf = await PDFDocument.create();
+      let processed = 0;
+
+      for (const file of files) {
+        updateProgress(mergeProgressFill, mergeProgressText, 
+          10 + (processed / files.length) * 80, 
+          `Processing ${file.name}...`);
+        
+        const bytes = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(bytes);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach(page => mergedPdf.addPage(page));
+        
+        processed++;
+      }
+
+      updateProgress(mergeProgressFill, mergeProgressText, 95, 'Finalizing merged PDF...');
+      await delay(500);
+      
+      return await mergedPdf.save();
+    }
+
+    // Split functionality
+    splitInput.addEventListener('change', async (e) => {
+      splitFile = e.target.files[0];
+      if (splitFile && splitFile.type === 'application/pdf') {
+        // Update file input label
+        const fileLabel = splitInput.previousElementSibling;
+        fileLabel.innerHTML = `<i class="fas fa-check"></i> ${splitFile.name}`;
+        fileLabel.style.borderColor = '#4CAF50';
+        fileLabel.style.color = '#4CAF50';
+        
+        // Update file info
+        splitFileName.textContent = splitFile.name;
+        splitFileSize.textContent = formatFileSize(splitFile.size);
+        
+        try {
+          const bytes = await splitFile.arrayBuffer();
+          const pdfDoc = await PDFDocument.load(bytes);
+          totalPages.textContent = pdfDoc.getPageCount();
+          splitFileInfo.style.display = 'block';
+          splitBtn.disabled = false;
+        } catch (error) {
+          showStatus(splitStatus, 'Error reading PDF file.', 'error');
+        }
+      } else {
+        splitBtn.disabled = true;
+        if (splitFile) {
+          showStatus(splitStatus, 'Please select a valid PDF file.', 'error');
+        }
+      }
+    });
+
+    splitBtn.addEventListener('click', async () => {
+      if (!splitFile) {
+        showStatus(splitStatus, 'Please select a PDF file first.', 'error');
+        return;
+      }
+
+      if (!splitPages.value.trim()) {
+        showStatus(splitStatus, 'Please enter pages to extract.', 'error');
+        return;
+      }
+
+      splitBtn.disabled = true;
+      splitProgressContainer.style.display = 'block';
+      updateProgress(splitProgressFill, splitProgressText, 10, 'Loading PDF...');
+
+      try {
+        const bytes = await splitFile.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(bytes);
+        const maxPages = pdfDoc.getPageCount();
+        
+        updateProgress(splitProgressFill, splitProgressText, 30, 'Parsing page selection...');
+        
+        const pageIndices = parsePageInput(splitPages.value, maxPages);
+        
+        if (pageIndices.length === 0) {
+          showStatus(splitStatus, 'No valid pages selected.', 'error');
+          return;
+        }
+
+        updateProgress(splitProgressFill, splitProgressText, 60, 'Extracting pages...');
+        
+        const splitBytes = await splitPDF(pdfDoc, pageIndices);
+        const blob = new Blob([splitBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        splitDownloadLink.href = url;
+        splitDownloadLink.download = `split-pages-${pageIndices.length}.pdf`;
+        splitDownloadLink.style.display = 'inline-block';
+        showStatus(splitStatus, `Successfully extracted ${pageIndices.length} pages!`, 'success');
+        
+      } catch (error) {
+        showStatus(splitStatus, 'Split failed. Please check your page selection.', 'error');
+        console.error('Split error:', error);
+      } finally {
+        splitBtn.disabled = false;
+        splitProgressContainer.style.display = 'none';
+      }
+    });
+
+    async function splitPDF(pdfDoc, pageIndices) {
+      const splitPdf = await PDFDocument.create();
+      
+      updateProgress(splitProgressFill, splitProgressText, 80, 'Creating new PDF...');
+      
+      const pages = await splitPdf.copyPages(pdfDoc, pageIndices);
+      pages.forEach((page) => splitPdf.addPage(page));
+      
+      updateProgress(splitProgressFill, splitProgressText, 95, 'Finalizing...');
+      await delay(300);
+      
+      return await splitPdf.save();
+    }
+
+    function parsePageInput(input, maxPages) {
+      const ranges = input.split(',');
+      const pages = new Set();
+
+      for (const range of ranges) {
+        const trimmed = range.trim();
+        if (trimmed.includes('-')) {
+          const [start, end] = trimmed.split('-').map(num => parseInt(num.trim(), 10) - 1);
+          const validStart = Math.max(0, start);
+          const validEnd = Math.min(maxPages - 1, isNaN(end) ? validStart : end);
+          
+          for (let i = validStart; i <= validEnd; i++) {
+            pages.add(i);
+          }
+        } else {
+          const index = parseInt(trimmed, 10) - 1;
+          if (!isNaN(index) && index >= 0 && index < maxPages) {
+            pages.add(index);
+          }
+        }
+      }
+
+      return Array.from(pages).sort((a, b) => a - b);
+    }
+
+    // Utility functions
+    function showStatus(element, message, type) {
+      element.textContent = message;
+      element.className = `status ${type}`;
+      element.style.display = 'block';
+    }
+
+    function updateProgress(fillElement, textElement, percentage, text) {
+      fillElement.style.width = `${percentage}%`;
+      textElement.textContent = text;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
