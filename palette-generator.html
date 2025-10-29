@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Palette Generator - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .generator-section {
+      margin: 1.5rem 0;
+    }
+
+    .palette-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .control-item {
+      text-align: left;
+    }
+
+    .control-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .palette-section {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .palette-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .color-card {
+      border-radius: var(--rounded);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .color-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-swatch {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+    }
+
+    .color-info {
+      padding: 0.75rem;
+      background: var(--white);
+      text-align: center;
+    }
+
+    .color-hex {
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .color-rgb {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .export-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .export-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .export-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .css-output {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+    }
+
+    .css-code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+      word-break: break-all;
+      cursor: pointer;
+      padding: 1rem;
+      background-color: #2d3748;
+      color: #e2e8f0;
+      border-radius: var(--rounded);
+      transition: var(--transition);
+    }
+
+    .css-code:hover {
+      background-color: #4a5568;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .palette-history {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .history-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .history-palette {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--rounded);
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .history-palette:hover {
+      transform: scale(1.05);
+    }
+
+    .history-color {
+      height: 20px;
+      flex: 1;
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-red);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .palette-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+      
+      .palette-controls {
+        grid-template-columns: 1fr;
+      }
+      
+      .export-options {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .color-swatch {
+        height: 80px;
+      }
+      
+      .history-color {
+        height: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Palette Generator</h1>
+    
+    <div class="calculator-info">
+      <h3>Create beautiful color palettes:</h3>
+      <ul>
+        <li>Generate harmonious color schemes</li>
+        <li>Multiple palette types and sizes</li>
+        <li>Export to CSS and other formats</li>
+        <li>Save your favorite palettes</li>
+      </ul>
+    </div>
+    
+    <div class="generator-section">
+      <div class="palette-controls">
+        <div class="control-item">
+          <label class="control-label" for="paletteType">Palette Type</label>
+          <select id="paletteType">
+            <option value="random">Random Colors</option>
+            <option value="analogous">Analogous</option>
+            <option value="complementary">Complementary</option>
+            <option value="triadic">Triadic</option>
+            <option value="monochromatic">Monochromatic</option>
+            <option value="warm">Warm Colors</option>
+            <option value="cool">Cool Colors</option>
+          </select>
+        </div>
+        
+        <div class="control-item">
+          <label class="control-label" for="paletteSize">Number of Colors</label>
+          <input type="number" id="paletteSize" min="3" max="12" value="5">
+        </div>
+        
+        <div class="control-item">
+          <label class="control-label" for="baseColor">Base Color (for harmony)</label>
+          <input type="color" id="baseColor" value="#E74C3C">
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="button" onclick="generatePalette()">
+          <i class="fas fa-palette"></i> Generate Palette
+        </button>
+        <button class="button button-secondary" onclick="generateRandomPalette()">
+          <i class="fas fa-random"></i> Random Palette
+        </button>
+        <button class="button button-secondary" onclick="saveToHistory()">
+          <i class="fas fa-save"></i> Save Palette
+        </button>
+        <button class="button button-clear" onclick="clearPalette()">
+          <i class="fas fa-eraser"></i> Clear
+        </button>
+      </div>
+    </div>
+    
+    <div class="palette-section">
+      <div class="palette-title">Color Palette</div>
+      <div class="palette-grid" id="paletteBox">
+        <!-- Colors will be generated here -->
+      </div>
+    </div>
+    
+    <div class="export-section">
+      <div class="export-title">Export Options</div>
+      
+      <div class="export-options">
+        <button class="button" onclick="exportToCSS()">
+          <i class="fab fa-css3"></i> Export CSS
+        </button>
+        <button class="button button-secondary" onclick="copyAllColors()">
+          <i class="fas fa-copy"></i> Copy All HEX
+        </button>
+        <button class="button button-secondary" onclick="exportToJSON()">
+          <i class="fas fa-code"></i> Export JSON
+        </button>
+      </div>
+      
+      <div class="css-output" id="cssOutput" style="display: none;">
+        <div class="control-label">CSS Variables</div>
+        <div class="css-code" id="cssCode" onclick="copyToClipboard('cssCode')">
+          /* CSS variables will appear here */
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-history" id="paletteHistory">
+      <div class="history-title">Saved Palettes</div>
+      <div class="history-grid" id="historyGrid">
+        <!-- Palette history will be populated here -->
+      </div>
+      
+      <div class="button-group">
+        <button class="button button-clear" onclick="clearHistory()">
+          <i class="fas fa-trash"></i> Clear History
+        </button>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> Copied to clipboard!
+  </div>
+
+  <script>
+    let currentPalette = [];
+    let paletteHistory = [];
+
+    // Initialize with default palette
+    generatePalette();
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(c => c + c).join('');
+      }
+      const bigint = parseInt(hex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return { r, g, b };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }).join("").toUpperCase();
+    }
+
+    function generateHarmoniousColors(baseColor, type, count) {
+      const base = hexToRgb(baseColor);
+      const colors = [baseColor];
+      
+      for (let i = 1; i < count; i++) {
+        let r, g, b;
+        
+        switch(type) {
+          case 'analogous':
+            // Rotate hue by 30 degrees for analogous colors
+            const analogousStep = 30;
+            r = Math.min(255, Math.max(0, base.r + (i * analogousStep) % 360));
+            g = Math.min(255, Math.max(0, base.g + (i * analogousStep) % 360));
+            b = Math.min(255, Math.max(0, base.b + (i * analogousStep) % 360));
+            break;
+            
+          case 'complementary':
+            // Complementary color and variations
+            r = 255 - base.r;
+            g = 255 - base.g;
+            b = 255 - base.b;
+            // Adjust for variations
+            r = Math.min(255, Math.max(0, r + (i * 20)));
+            g = Math.min(255, Math.max(0, g + (i * 20)));
+            b = Math.min(255, Math.max(0, b + (i * 20)));
+            break;
+            
+          case 'triadic':
+            // Triadic colors (120 degree separation)
+            const triadicStep = 120;
+            r = Math.min(255, Math.max(0, (base.r + i * triadicStep) % 255));
+            g = Math.min(255, Math.max(0, (base.g + i * triadicStep) % 255));
+            b = Math.min(255, Math.max(0, (base.b + i * triadicStep) % 255));
+            break;
+            
+          case 'monochromatic':
+            // Different shades of the same hue
+            const shadeFactor = 0.8 / (count - 1);
+            r = Math.min(255, Math.max(0, base.r * (1 - i * shadeFactor)));
+            g = Math.min(255, Math.max(0, base.g * (1 - i * shadeFactor)));
+            b = Math.min(255, Math.max(0, base.b * (1 - i * shadeFactor)));
+            break;
+            
+          case 'warm':
+            // Warm colors (reds, oranges, yellows)
+            r = Math.min(255, Math.max(150, base.r + Math.random() * 100));
+            g = Math.min(255, Math.max(50, base.g * (0.5 + Math.random() * 0.5)));
+            b = Math.min(255, Math.max(0, base.b * (0.2 + Math.random() * 0.3)));
+            break;
+            
+          case 'cool':
+            // Cool colors (blues, greens, purples)
+            r = Math.min(255, Math.max(0, base.r * (0.2 + Math.random() * 0.3)));
+            g = Math.min(255, Math.max(100, base.g + Math.random() * 100));
+            b = Math.min(255, Math.max(150, base.b + Math.random() * 100));
+            break;
+            
+          default:
+            // Random colors
+            return Array.from({length: count}, getRandomColor);
+        }
+        
+        colors.push(rgbToHex(Math.round(r), Math.round(g), Math.round(b)));
+      }
+      
+      return colors;
+    }
+
+    function generatePalette() {
+      const paletteType = document.getElementById("paletteType").value;
+      const paletteSize = parseInt(document.getElementById("paletteSize").value);
+      const baseColor = document.getElementById("baseColor").value;
+      
+      let colors;
+      
+      if (paletteType === 'random') {
+        colors = Array.from({length: paletteSize}, getRandomColor);
+      } else {
+        colors = generateHarmoniousColors(baseColor, paletteType, paletteSize);
+      }
+      
+      currentPalette = colors;
+      displayPalette(colors);
+    }
+
+    function generateRandomPalette() {
+      // Randomize all controls
+      const types = ['random', 'analogous', 'complementary', 'triadic', 'monochromatic', 'warm', 'cool'];
+      const randomType = types[Math.floor(Math.random() * types.length)];
+      const randomSize = Math.floor(Math.random() * 7) + 3; // 3-9 colors
+      const randomBase = getRandomColor();
+      
+      document.getElementById("paletteType").value = randomType;
+      document.getElementById("paletteSize").value = randomSize;
+      document.getElementById("baseColor").value = randomBase;
+      
+      generatePalette();
+      showNotification("Random palette generated!");
+    }
+
+    function displayPalette(colors) {
+      const paletteBox = document.getElementById("paletteBox");
+      paletteBox.innerHTML = "";
+
+      colors.forEach((color, index) => {
+        const rgb = hexToRgb(color);
+        const rgbText = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        
+        const card = document.createElement("div");
+        card.className = "color-card";
+        
+        card.innerHTML = `
+          <div class="color-swatch" style="background-color: ${color};" onclick="copyColor('${color}')">
+            ${color}
+          </div>
+          <div class="color-info">
+            <div class="color-hex">${color}</div>
+            <div class="color-rgb">${rgbText}</div>
+          </div>
+        `;
+        
+        paletteBox.appendChild(card);
+      });
+    }
+
+    function clearPalette() {
+      document.getElementById("paletteType").value = "random";
+      document.getElementById("paletteSize").value = "5";
+      document.getElementById("baseColor").value = "#E74C3C";
+      
+      generatePalette();
+      showNotification("Palette cleared!");
+    }
+
+    function saveToHistory() {
+      if (currentPalette.length === 0) {
+        showNotification("Please generate a palette first!", true);
+        return;
+      }
+      
+      // Avoid duplicates
+      const paletteString = JSON.stringify(currentPalette);
+      if (!paletteHistory.some(p => JSON.stringify(p) === paletteString)) {
+        paletteHistory.unshift([...currentPalette]);
+        
+        // Keep only last 6 palettes
+        if (paletteHistory.length > 6) {
+          paletteHistory.pop();
+        }
+        
+        updateHistoryDisplay();
+        showNotification("Palette saved to history!");
+      } else {
+        showNotification("Palette already in history!");
+      }
+    }
+
+    function updateHistoryDisplay() {
+      const historyGrid = document.getElementById("historyGrid");
+      historyGrid.innerHTML = '';
+      
+      paletteHistory.forEach((palette, index) => {
+        const paletteElement = document.createElement("div");
+        paletteElement.className = "history-palette";
+        paletteElement.title = `Palette ${index + 1}`;
+        paletteElement.addEventListener('click', () => {
+          loadPaletteFromHistory(index);
+        });
+        
+        palette.forEach(color => {
+          const colorElement = document.createElement("div");
+          colorElement.className = "history-color";
+          colorElement.style.backgroundColor = color;
+          paletteElement.appendChild(colorElement);
+        });
+        
+        historyGrid.appendChild(paletteElement);
+      });
+    }
+
+    function loadPaletteFromHistory(index) {
+      const palette = paletteHistory[index];
+      currentPalette = [...palette];
+      displayPalette(palette);
+      showNotification("Palette loaded from history!");
+    }
+
+    function clearHistory() {
+      paletteHistory = [];
+      updateHistoryDisplay();
+      showNotification("Palette history cleared!");
+    }
+
+    function copyColor(color) {
+      navigator.clipboard.writeText(color).then(() => {
+        showNotification(`Color ${color} copied to clipboard!`);
+      }).catch(err => {
+        console.error('Failed to copy color: ', err);
+        showNotification("Failed to copy color!", true);
+      });
+    }
+
+    function copyAllColors() {
+      if (currentPalette.length === 0) {
+        showNotification("Please generate a palette first!", true);
+        return;
+      }
+      
+      const text = currentPalette.join(', ');
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("All colors copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy colors: ', err);
+        showNotification("Failed to copy colors!", true);
+      });
+    }
+
+    function exportToCSS() {
+      if (currentPalette.length === 0) {
+        showNotification("Please generate a palette first!", true);
+        return;
+      }
+      
+      let cssCode = "/* Color Palette CSS Variables */\n:root {\n";
+      currentPalette.forEach((color, index) => {
+        cssCode += `  --color-${index + 1}: ${color};\n`;
+      });
+      cssCode += "}";
+      
+      document.getElementById("cssCode").textContent = cssCode;
+      document.getElementById("cssOutput").style.display = 'block';
+      showNotification("CSS code generated!");
+    }
+
+    function exportToJSON() {
+      if (currentPalette.length === 0) {
+        showNotification("Please generate a palette first!", true);
+        return;
+      }
+      
+      const jsonData = {
+        palette: currentPalette,
+        generated: new Date().toISOString(),
+        colors: currentPalette.map(color => {
+          const rgb = hexToRgb(color);
+          return {
+            hex: color,
+            rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+          };
+        })
+      };
+      
+      const jsonString = JSON.stringify(jsonData, null, 2);
+      navigator.clipboard.writeText(jsonString).then(() => {
+        showNotification("Palette exported as JSON to clipboard!");
+      }).catch(err => {
+        console.error('Failed to export JSON: ', err);
+        showNotification("Failed to export JSON!", true);
+      });
+    }
+
+    function copyToClipboard(elementId) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("CSS code copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        showNotification("Failed to copy CSS code!", true);
+      });
+    }
+
+    function showNotification(message, isError = false) {
+      const copyNotification = document.getElementById("copyNotification");
+      copyNotification.textContent = message;
+      copyNotification.style.background = isError ? '#e53e3e' : 'var(--primary-red)';
+      copyNotification.classList.add('show');
+      
+      setTimeout(() => {
+        copyNotification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize history display
+    updateHistoryDisplay();
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
