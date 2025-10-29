@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text Shortener - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 150px;
+      font-family: inherit;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .shortened-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .shortened-value {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-item input[type="number"] {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .length-slider {
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    .slider-container {
+      padding: 0 1rem;
+    }
+
+    .slider-value {
+      text-align: center;
+      font-weight: 600;
+      color: var(--primary-red);
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Text Shortener Tool</h1>
+    
+    <div class="calculator-info">
+      <h3>Shorten your text effectively:</h3>
+      <ul>
+        <li>Customizable character limits</li>
+        <li>Smart word boundary detection</li>
+        <li>Preserve readability when shortening</li>
+        <li>Real-time text statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="textBox">Enter Your Text</label>
+        <div 
+          class="text-area" 
+          id="textBox" 
+          contenteditable="true" 
+          placeholder="Paste or type your text here to shorten it..."
+        ></div>
+      </div>
+
+      <div class="slider-container">
+        <label class="input-label">Shorten to: <span id="sliderValue" class="slider-value">100</span> characters</label>
+        <input 
+          type="range" 
+          id="lengthSlider" 
+          class="length-slider" 
+          min="10" 
+          max="500" 
+          value="100" 
+          step="10"
+        >
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <input type="checkbox" id="preserveWords" checked>
+          <label class="option-label" for="preserveWords">Preserve Word Boundaries</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="addEllipsis" checked>
+          <label class="option-label" for="addEllipsis">Add Ellipsis (...) </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button" onclick="shortenText()">
+        <i class="fas fa-compress-alt"></i> Shorten Text
+      </button>
+      <button class="button button-secondary" onclick="shortenToSentence()">
+        <i class="fas fa-sentence"></i> Shorten to Sentence
+      </button>
+      <button class="button button-clear" onclick="clearText()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyShortened()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title">Shortened Text</div>
+      
+      <div class="shortened-display">
+        <div class="shortened-value" id="shortenedValue">Your shortened text will appear here...</div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="originalLength">0</div>
+          <div class="stat-label">Original Characters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="shortenedLength">0</div>
+          <div class="stat-label">Shortened Characters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="reductionPercent">0%</div>
+          <div class="stat-label">Reduction</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> Shortened from <strong id="originalSummary">0 characters</strong> to <strong id="shortenedSummary">0 characters</strong></p>
+        <p><i class="fas fa-chart-line"></i> Reduced text length by <strong id="reductionSummary">0%</strong></p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    function getTextContent() {
+      return document.getElementById("textBox").innerText.trim();
+    }
+
+    function updateStats(originalLength, shortenedLength) {
+      const reduction = originalLength - shortenedLength;
+      const reductionPercent = originalLength > 0 ? Math.round((reduction / originalLength) * 100) : 0;
+      
+      document.getElementById("originalLength").textContent = originalLength;
+      document.getElementById("shortenedLength").textContent = shortenedLength;
+      document.getElementById("reductionPercent").textContent = reductionPercent + '%';
+      
+      document.getElementById("originalSummary").textContent = originalLength + ' characters';
+      document.getElementById("shortenedSummary").textContent = shortenedLength + ' characters';
+      document.getElementById("reductionSummary").textContent = reductionPercent + '%';
+    }
+
+    function shortenText() {
+      const content = getTextContent();
+      const maxLength = parseInt(document.getElementById("lengthSlider").value);
+      const preserveWords = document.getElementById("preserveWords").checked;
+      const addEllipsis = document.getElementById("addEllipsis").checked;
+      
+      if (!content) {
+        showResult("Please enter some text to shorten.");
+        return;
+      }
+      
+      if (content.length <= maxLength) {
+        document.getElementById("shortenedValue").textContent = content;
+        updateStats(content.length, content.length);
+        document.getElementById("resultSection").style.display = 'block';
+        return;
+      }
+      
+      let shortened = content.substring(0, maxLength);
+      
+      // If preserving words, find the last space and cut there
+      if (preserveWords && shortened.length < content.length) {
+        const lastSpace = shortened.lastIndexOf(' ');
+        if (lastSpace > maxLength * 0.7) { // Only cut if we're not losing too much text
+          shortened = shortened.substring(0, lastSpace);
+        }
+      }
+      
+      // Add ellipsis if requested
+      if (addEllipsis && shortened.length < content.length) {
+        shortened += '...';
+      }
+      
+      document.getElementById("shortenedValue").textContent = shortened;
+      updateStats(content.length, shortened.length);
+      document.getElementById("resultSection").style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function shortenToSentence() {
+      const content = getTextContent();
+      const maxLength = parseInt(document.getElementById("lengthSlider").value);
+      const addEllipsis = document.getElementById("addEllipsis").checked;
+      
+      if (!content) {
+        showResult("Please enter some text to shorten.");
+        return;
+      }
+      
+      if (content.length <= maxLength) {
+        document.getElementById("shortenedValue").textContent = content;
+        updateStats(content.length, content.length);
+        document.getElementById("resultSection").style.display = 'block';
+        return;
+      }
+      
+      // Find the last sentence end within the limit
+      let shortened = content.substring(0, maxLength);
+      const sentenceEnd = Math.max(
+        shortened.lastIndexOf('. '),
+        shortened.lastIndexOf('! '),
+        shortened.lastIndexOf('? ')
+      );
+      
+      if (sentenceEnd > maxLength * 0.5) { // Only cut if we're not losing too much text
+        shortened = content.substring(0, sentenceEnd + 1);
+      }
+      
+      // Add ellipsis if requested and text was shortened
+      if (addEllipsis && shortened.length < content.length) {
+        shortened += '..';
+      }
+      
+      document.getElementById("shortenedValue").textContent = shortened;
+      updateStats(content.length, shortened.length);
+      document.getElementById("resultSection").style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function clearText() {
+      document.getElementById("textBox").innerText = '';
+      document.getElementById("shortenedValue").textContent = 'Your shortened text will appear here...';
+      document.getElementById("resultSection").style.display = 'none';
+    }
+
+    function copyShortened() {
+      const text = document.getElementById("shortenedValue").textContent;
+      if (text && text !== 'Your shortened text will appear here...') {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Shortened text copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+          alert('Failed to copy text to clipboard.');
+        });
+      } else {
+        alert('Please shorten some text first.');
+      }
+    }
+
+    function showResult(message) {
+      document.getElementById("shortenedValue").textContent = message;
+      document.getElementById("resultSection").style.display = 'block';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textBox = document.getElementById("textBox");
+      textBox.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textBox.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Update slider value display
+      const slider = document.getElementById("lengthSlider");
+      const sliderValue = document.getElementById("sliderValue");
+      
+      slider.addEventListener('input', function() {
+        sliderValue.textContent = this.value;
+      });
+      
+      // Auto-shorten as user types (with debounce)
+      let typingTimer;
+      const doneTypingInterval = 2000; // 2 seconds
+      
+      textBox.addEventListener('input', function() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(shortenText, doneTypingInterval);
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
