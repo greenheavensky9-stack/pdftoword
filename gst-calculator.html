@@ -1,1 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GST Calculator - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .unit-info {
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border: none;
+      font-size: 1rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      margin-top: 1rem;
+      width: 100%;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .gst-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+    }
+
+    .gst-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .gst-label {
+      font-size: 1rem;
+      color: var(--text-light);
+    }
+
+    .breakdown {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .breakdown-item {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .breakdown-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .breakdown-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .rate-options {
+      display: flex;
+      gap: 10px;
+      margin-top: 0.5rem;
+    }
+
+    .rate-option {
+      flex: 1;
+      padding: 0.5rem;
+      background-color: var(--light-red);
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .rate-option.active {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border-color: var(--primary-red);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .breakdown {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .gst-value {
+        font-size: 2rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gst-value {
+        font-size: 1.8rem;
+      }
+      
+      .breakdown-value {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>GST Calculator</h1>
+    
+    <div class="calculator-info">
+      <h3>Calculate GST easily:</h3>
+      <ul>
+        <li>Calculate GST amount</li>
+        <li>Get total amount including GST</li>
+        <li>Quick rate selection</li>
+        <li>Clear breakdown of amounts</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="amount">Base Amount</label>
+        <input type="number" id="amount" placeholder="Enter base amount" min="1" max="100000000" step="1" />
+        <div class="unit-info">Amount in your local currency</div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label" for="gstRate">GST Rate</label>
+        <input type="number" id="gstRate" placeholder="Enter GST rate" min="0.1" max="100" step="0.1" />
+        <div class="unit-info">Percentage rate (%)</div>
+        
+        <div class="rate-options">
+          <div class="rate-option" onclick="setGSTRate(5)">5%</div>
+          <div class="rate-option" onclick="setGSTRate(12)">12%</div>
+          <div class="rate-option" onclick="setGSTRate(18)">18%</div>
+          <div class="rate-option" onclick="setGSTRate(28)">28%</div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="button" onclick="calculateGST()">
+      <i class="fas fa-calculator"></i> Calculate GST
+    </button>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title">Your GST Calculation</div>
+      
+      <div class="gst-display">
+        <div class="gst-value" id="gstValue">₹0</div>
+        <div class="gst-label">GST Amount</div>
+      </div>
+      
+      <div class="breakdown">
+        <div class="breakdown-item">
+          <div class="breakdown-value" id="baseAmountDisplay">₹0</div>
+          <div class="breakdown-label">Base Amount</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-value" id="gstAmountDisplay">₹0</div>
+          <div class="breakdown-label">GST Amount</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-value" id="totalAmountDisplay">₹0</div>
+          <div class="breakdown-label">Total Amount</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-value" id="gstPercentage">0%</div>
+          <div class="breakdown-label">GST Rate</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> Your base amount is <strong id="baseSummary">₹0</strong> with <strong id="rateSummary">0%</strong> GST</p>
+        <p><i class="fas fa-chart-pie"></i> You'll pay <strong id="gstSummary">₹0</strong> as GST</p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    function setGSTRate(rate) {
+      document.getElementById('gstRate').value = rate;
+      
+      // Update active state
+      const options = document.querySelectorAll('.rate-option');
+      options.forEach(option => option.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function calculateGST() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const gstRate = parseFloat(document.getElementById("gstRate").value);
+
+      if (!amount || !gstRate || amount < 0 || gstRate < 0) {
+        showResult("Please enter valid values.");
+        return;
+      }
+
+      if (amount > 100000000 || gstRate > 100) {
+        showResult("Please enter realistic values.");
+        return;
+      }
+
+      const gstAmount = (amount * gstRate) / 100;
+      const totalAmount = amount + gstAmount;
+
+      // Format currency
+      const formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+
+      // Update display
+      document.getElementById("gstValue").textContent = formatter.format(gstAmount);
+      document.getElementById("baseAmountDisplay").textContent = formatter.format(amount);
+      document.getElementById("gstAmountDisplay").textContent = formatter.format(gstAmount);
+      document.getElementById("totalAmountDisplay").textContent = formatter.format(totalAmount);
+      document.getElementById("gstPercentage").textContent = gstRate.toFixed(1) + '%';
+
+      // Update summary
+      document.getElementById("baseSummary").textContent = formatter.format(amount);
+      document.getElementById("rateSummary").textContent = gstRate.toFixed(1) + '%';
+      document.getElementById("gstSummary").textContent = formatter.format(gstAmount);
+
+      // Show result section
+      document.getElementById("resultSection").style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function showResult(message) {
+      const resultSection = document.getElementById("resultSection");
+      resultSection.innerHTML = `<div class="result-title">${message}</div>`;
+      resultSection.style.display = 'block';
+    }
+
+    // Allow Enter key to calculate GST
+    document.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        calculateGST();
+      }
+    });
+
+    // Input validation
+    document.getElementById('amount').addEventListener('input', function() {
+      if (this.value > 100000000) this.value = 100000000;
+      if (this.value < 0) this.value = '';
+    });
+
+    document.getElementById('gstRate').addEventListener('input', function() {
+      if (this.value > 100) this.value = 100;
+      if (this.value < 0) this.value = '';
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
