@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Keyword Density Checker - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 150px;
+      font-family: inherit;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .density-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: center;
+    }
+
+    .density-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .density-label {
+      font-size: 1rem;
+      color: var(--text-light);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .warning-summary {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+    }
+
+    .warning-summary p {
+      color: #856404;
+    }
+
+    .error-summary {
+      background-color: #fed7d7;
+      border: 1px solid #e53e3e;
+    }
+
+    .error-summary p {
+      color: #c53030;
+    }
+
+    .keyword-highlight {
+      background-color: #fff3cd;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      margin: 0.1rem;
+      border: 1px solid #ffeaa7;
+    }
+
+    .analysis-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .analysis-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .analysis-content {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      text-align: left;
+    }
+
+    .analysis-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--light-red);
+    }
+
+    .analysis-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .analysis-label {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .analysis-text {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-red);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .density-value {
+        font-size: 2rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .density-value {
+        font-size: 1.8rem;
+      }
+      
+      .stat-value {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Keyword Density Checker</h1>
+    
+    <div class="calculator-info">
+      <h3>Analyze keyword usage in your content:</h3>
+      <ul>
+        <li>Calculate keyword density percentage</li>
+        <li>Track keyword frequency and distribution</li>
+        <li>Get SEO recommendations</li>
+        <li>Highlight keywords in text</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="textInput">Enter Your Text</label>
+        <div 
+          class="text-area" 
+          id="textInput" 
+          contenteditable="true" 
+          placeholder="Paste or type your text here for keyword analysis..."
+        ></div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="keywordInput">Keyword to Analyze</label>
+        <input 
+          type="text" 
+          id="keywordInput" 
+          placeholder="Enter the keyword you want to analyze"
+        >
+      </div>
+
+      <div class="button-group">
+        <button class="button" onclick="calculateKeywordDensity()">
+          <i class="fas fa-chart-bar"></i> Analyze Keyword Density
+        </button>
+        <button class="button button-secondary" onclick="highlightKeywords()">
+          <i class="fas fa-highlighter"></i> Highlight Keywords
+        </button>
+        <button class="button button-clear" onclick="clearAll()">
+          <i class="fas fa-eraser"></i> Clear All
+        </button>
+      </div>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title">Keyword Analysis Results</div>
+      
+      <div class="density-display">
+        <div class="density-value" id="densityResult">0.00%</div>
+        <div class="density-label">Keyword Density</div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="keywordCount">0</div>
+          <div class="stat-label">Keyword Occurrences</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalWords">0</div>
+          <div class="stat-label">Total Words</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="keywordPositions">0</div>
+          <div class="stat-label">First Appearance</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> <span id="summaryText">Optimal keyword density is typically between 1-2% for SEO</span></p>
+      </div>
+    </div>
+
+    <div class="analysis-section" id="analysisSection" style="display: none;">
+      <div class="analysis-title">SEO Analysis & Recommendations</div>
+      <div class="analysis-content">
+        <div class="analysis-item">
+          <div class="analysis-label">Keyword Distribution</div>
+          <div class="analysis-text" id="distributionText">Your keyword appears evenly throughout the content.</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">SEO Recommendation</div>
+          <div class="analysis-text" id="seoRecommendation">Your keyword density is within the optimal range for SEO.</div>
+        </div>
+        <div class="analysis-item">
+          <div class="analysis-label">Content Quality</div>
+          <div class="analysis-text" id="qualityText">The content maintains good readability while incorporating the target keyword.</div>
+        </div>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> Analysis completed!
+  </div>
+
+  <script>
+    let originalText = '';
+
+    function calculateKeywordDensity() {
+      const text = document.getElementById("textInput").textContent.trim();
+      const keyword = document.getElementById("keywordInput").value.trim().toLowerCase();
+      
+      if (!text) {
+        showError("Please enter some text to analyze.");
+        return;
+      }
+
+      if (!keyword) {
+        showError("Please enter a keyword to analyze.");
+        return;
+      }
+
+      originalText = text;
+      
+      const words = text.split(/\s+/).filter(word => word.length > 0);
+      const totalWordCount = words.length;
+
+      if (totalWordCount === 0) {
+        showError("Please enter valid text with words.");
+        return;
+      }
+
+      let keywordCountValue = 0;
+      let firstPosition = -1;
+      
+      words.forEach((word, index) => {
+        if (word.toLowerCase() === keyword) {
+          keywordCountValue++;
+          if (firstPosition === -1) {
+            firstPosition = index + 1;
+          }
+        }
+      });
+
+      const density = (keywordCountValue / totalWordCount) * 100;
+
+      // Update displays
+      document.getElementById("keywordCount").textContent = keywordCountValue;
+      document.getElementById("totalWords").textContent = totalWordCount;
+      document.getElementById("densityResult").textContent = density.toFixed(2) + '%';
+      document.getElementById("keywordPositions").textContent = firstPosition > 0 ? `Word ${firstPosition}` : 'Not found';
+
+      // Update summary based on density
+      updateSummary(density, keywordCountValue, totalWordCount);
+      
+      // Show analysis section
+      document.getElementById("analysisSection").style.display = 'block';
+      updateAnalysis(density, keywordCountValue, totalWordCount, firstPosition);
+      
+      // Show result section
+      document.getElementById("resultSection").style.display = 'block';
+      
+      showNotification("Keyword analysis completed!");
+    }
+
+    function highlightKeywords() {
+      const text = document.getElementById("textInput").textContent;
+      const keyword = document.getElementById("keywordInput").value.trim();
+      
+      if (!text || !keyword) {
+        showError("Please enter both text and a keyword to highlight.");
+        return;
+      }
+
+      const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+      const highlightedText = text.replace(regex, match => 
+        `<span class="keyword-highlight">${match}</span>`
+      );
+      
+      document.getElementById("textInput").innerHTML = highlightedText;
+      showNotification("Keywords highlighted in text!");
+    }
+
+    function clearAll() {
+      document.getElementById("textInput").innerHTML = '';
+      document.getElementById("keywordInput").value = '';
+      document.getElementById("resultSection").style.display = 'none';
+      document.getElementById("analysisSection").style.display = 'none';
+      originalText = '';
+      showNotification("All fields cleared!");
+    }
+
+    function updateSummary(density, count, totalWords) {
+      const summaryElement = document.getElementById("summary");
+      const summaryText = document.getElementById("summaryText");
+      
+      if (count === 0) {
+        summaryElement.className = "summary error-summary";
+        summaryText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Keyword not found in the text. Consider adding it for better SEO.`;
+      } else if (density < 0.5) {
+        summaryElement.className = "summary warning-summary";
+        summaryText.innerHTML = `<i class="fas fa-info-circle"></i> Low keyword density (${density.toFixed(2)}%). Consider increasing keyword usage for better SEO.`;
+      } else if (density > 3) {
+        summaryElement.className = "summary warning-summary";
+        summaryText.innerHTML = `<i class="fas fa-info-circle"></i> High keyword density (${density.toFixed(2)}%). May be considered keyword stuffing.`;
+      } else {
+        summaryElement.className = "summary";
+        summaryText.innerHTML = `<i class="fas fa-check-circle"></i> Good keyword density (${density.toFixed(2)}%). Optimal for SEO.`;
+      }
+    }
+
+    function updateAnalysis(density, count, totalWords, firstPosition) {
+      // Update distribution text
+      const distributionText = document.getElementById("distributionText");
+      if (firstPosition <= totalWords * 0.2) {
+        distributionText.textContent = "Good! Your keyword appears early in the content, which is beneficial for SEO.";
+      } else {
+        distributionText.textContent = "Consider placing your keyword earlier in the content for better SEO impact.";
+      }
+
+      // Update SEO recommendation
+      const seoRecommendation = document.getElementById("seoRecommendation");
+      if (density < 0.5) {
+        seoRecommendation.textContent = "Increase keyword usage naturally throughout the content. Aim for 1-2% density.";
+      } else if (density > 3) {
+        seoRecommendation.textContent = "Reduce keyword frequency to avoid keyword stuffing. Focus on natural language.";
+      } else {
+        seoRecommendation.textContent = "Your keyword density is optimal. Maintain this level while ensuring natural readability.";
+      }
+
+      // Update quality text
+      const qualityText = document.getElementById("qualityText");
+      if (totalWords < 300) {
+        qualityText.textContent = "Consider expanding your content. Longer articles (300+ words) typically perform better in search results.";
+      } else if (totalWords > 1500) {
+        qualityText.textContent = "Your content is comprehensive. Ensure it remains engaging and well-structured for readers.";
+      } else {
+        qualityText.textContent = "Good content length. Maintain focus on quality and relevance to your target keyword.";
+      }
+    }
+
+    function showError(message) {
+      const summaryElement = document.getElementById("summary");
+      const summaryText = document.getElementById("summaryText");
+      
+      summaryElement.className = "summary error-summary";
+      summaryText.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+      
+      document.getElementById("resultSection").style.display = 'block';
+      document.getElementById("analysisSection").style.display = 'none';
+    }
+
+    function showNotification(message, isError = false) {
+      const copyNotification = document.getElementById("copyNotification");
+      copyNotification.textContent = message;
+      copyNotification.style.background = isError ? '#e53e3e' : 'var(--primary-red)';
+      copyNotification.classList.add('show');
+      
+      setTimeout(() => {
+        copyNotification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textInput = document.getElementById("textInput");
+      textInput.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textInput.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Allow Enter key to calculate density
+      document.getElementById("keywordInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          calculateKeywordDensity();
+        }
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
