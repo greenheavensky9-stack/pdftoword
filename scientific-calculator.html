@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Scientific Calculator - Free Converter Tools</title>
+    <style>
+        :root {
+            --primary-red: #e74c3c;
+            --dark-red: #c0392b;
+            --light-red: #f9ebea;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-gray: #f8fafc;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --rounded: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .calculator-container {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: var(--rounded);
+            box-shadow: var(--shadow);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 1.8rem;
+            text-align: right;
+            border-radius: var(--rounded);
+            margin-bottom: 1.5rem;
+            padding: 0 15px;
+            border: 2px solid var(--light-red);
+            background-color: var(--white);
+            color: var(--text-dark);
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            height: 60px;
+            font-size: 1.2rem;
+            border-radius: var(--rounded);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.number {
+            background-color: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--light-red);
+        }
+
+        .button.number:hover {
+            background-color: var(--light-red);
+            border-color: var(--primary-red);
+        }
+
+        .button.operator {
+            background-color: var(--primary-red);
+            color: var(--white);
+        }
+
+        .button.operator:hover {
+            background-color: var(--dark-red);
+        }
+
+        .button.function {
+            background-color: var(--light-red);
+            color: var(--primary-red);
+            border: 2px solid var(--light-red);
+            font-size: 1rem;
+        }
+
+        .button.function:hover {
+            background-color: var(--primary-red);
+            color: var(--white);
+            border-color: var(--primary-red);
+        }
+
+        .button.equals {
+            background-color: var(--primary-red);
+            color: var(--white);
+            grid-column: span 2;
+        }
+
+        .button.equals:hover {
+            background-color: var(--dark-red);
+        }
+
+        .button.clear {
+            background-color: var(--text-light);
+            color: var(--white);
+        }
+
+        .button.clear:hover {
+            background-color: var(--text-dark);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+
+        .back-link:hover {
+            color: var(--dark-red);
+            text-decoration: underline;
+        }
+
+        .calculator-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--light-red);
+            border-radius: var(--rounded);
+            text-align: left;
+        }
+
+        .calculator-info h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .calculator-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .calculator-info li {
+            padding: 0.25rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calculator-info li:before {
+            content: "✓";
+            color: var(--primary-red);
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 1.5rem;
+                max-width: 350px;
+            }
+            
+            .button {
+                height: 50px;
+                font-size: 1.1rem;
+            }
+            
+            #display {
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            body {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .calculator-container {
+                max-width: 300px;
+            }
+            
+            .button {
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            .button.function {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>Scientific Calculator</h1>
+        
+        <input type="text" id="display" disabled />
+        
+        <div class="button-grid">
+            <button class="button function" onclick="appendToDisplay('sin(')">sin</button>
+            <button class="button function" onclick="appendToDisplay('cos(')">cos</button>
+            <button class="button function" onclick="appendToDisplay('tan(')">tan</button>
+            <button class="button clear" onclick="clearDisplay()">C</button>
+        </div>
+        
+        <div class="button-grid">
+            <button class="button function" onclick="appendToDisplay('log(')">log</button>
+            <button class="button function" onclick="appendToDisplay('ln(')">ln</button>
+            <button class="button function" onclick="appendToDisplay('sqrt(')">√</button>
+            <button class="button function" onclick="appendToDisplay('pow(')">x²</button>
+        </div>
+        
+        <div class="button-row">
+            <button class="button number" onclick="appendToDisplay('7')">7</button>
+            <button class="button number" onclick="appendToDisplay('8')">8</button>
+            <button class="button number" onclick="appendToDisplay('9')">9</button>
+            <button class="button operator" onclick="appendToDisplay('/')">/</button>
+        </div>
+        
+        <div class="button-row">
+            <button class="button number" onclick="appendToDisplay('4')">4</button>
+            <button class="button number" onclick="appendToDisplay('5')">5</button>
+            <button class="button number" onclick="appendToDisplay('6')">6</button>
+            <button class="button operator" onclick="appendToDisplay('*')">×</button>
+        </div>
+        
+        <div class="button-row">
+            <button class="button number" onclick="appendToDisplay('1')">1</button>
+            <button class="button number" onclick="appendToDisplay('2')">2</button>
+            <button class="button number" onclick="appendToDisplay('3')">3</button>
+            <button class="button operator" onclick="appendToDisplay('-')">-</button>
+        </div>
+        
+        <div class="button-row">
+            <button class="button number" onclick="appendToDisplay('0')">0</button>
+            <button class="button number" onclick="appendToDisplay('.')">.</button>
+            <button class="button operator" onclick="appendToDisplay('+')">+</button>
+            <button class="button equals" onclick="calculate()">=</button>
+        </div>
+        
+        <div class="button-row">
+            <button class="button function" onclick="appendToDisplay('(')">(</button>
+            <button class="button function" onclick="appendToDisplay(')')">)</button>
+            <button class="button function" onclick="appendToDisplay('pi')">π</button>
+            <button class="button function" onclick="appendToDisplay('e')">e</button>
+        </div>
+        
+        <div class="calculator-info">
+            <h3>Features:</h3>
+            <ul>
+                <li>Basic arithmetic operations</li>
+                <li>Trigonometric functions</li>
+                <li>Logarithms and exponents</li>
+                <li>Square roots and powers</li>
+            </ul>
+        </div>
+        
+        <a href="index.html" class="back-link">← Back to All Tools</a>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        // Append values to the display
+        function appendToDisplay(value) {
+            // Replace constants with their actual values
+            if (value === 'pi') {
+                display.value += Math.PI;
+            } else if (value === 'e') {
+                display.value += Math.E;
+            } else {
+                display.value += value;
+            }
+        }
+
+        // Clear the display
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        // Delete last character
+        function deleteLast() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        // Evaluate the expression and show the result
+        function calculate() {
+            try {
+                // Replace functions and constants for eval() interpretation
+                let expression = display.value;
+                expression = expression.replace(/sqrt/g, 'Math.sqrt');
+                expression = expression.replace(/pow/g, 'Math.pow');
+                expression = expression.replace(/log/g, 'Math.log10');
+                expression = expression.replace(/ln/g, 'Math.log');
+                expression = expression.replace(/sin/g, 'Math.sin');
+                expression = expression.replace(/cos/g, 'Math.cos');
+                expression = expression.replace(/tan/g, 'Math.tan');
+                expression = expression.replace(/pi/g, Math.PI);
+                expression = expression.replace(/e/g, Math.E);
+
+                // Handle power notation (x² becomes x^2)
+                expression = expression.replace(/(\d+)²/g, 'Math.pow($1,2)');
+
+                // Calculate the result
+                const result = eval(expression);
+                
+                // Format the result to avoid long decimals
+                if (Number.isInteger(result)) {
+                    display.value = result;
+                } else {
+                    display.value = parseFloat(result.toFixed(10));
+                }
+            } catch (e) {
+                display.value = 'Error';
+                // Clear error after 2 seconds
+                setTimeout(() => {
+                    if (display.value === 'Error') {
+                        clearDisplay();
+                    }
+                }, 2000);
+            }
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            // Numbers and operators
+            if ('0123456789+-*/.'.includes(key)) {
+                appendToDisplay(key);
+            }
+            // Enter key for equals
+            else if (key === 'Enter') {
+                calculate();
+            }
+            // Escape key for clear
+            else if (key === 'Escape') {
+                clearDisplay();
+            }
+            // Backspace for delete
+            else if (key === 'Backspace') {
+                deleteLast();
+            }
+            // Prevent default for these keys
+            if ('+-*/.EnterEscapeBackspace'.includes(key)) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>
