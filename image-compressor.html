@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Compressor - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .container {
+      background: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    #upload {
+      display: none;
+    }
+
+    .quality-control {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .quality-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .quality-slider {
+      width: 100%;
+      margin: 0.5rem 0;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--light-red);
+      outline: none;
+    }
+
+    .quality-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary-red);
+      cursor: pointer;
+    }
+
+    .quality-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary-red);
+      cursor: pointer;
+      border: none;
+    }
+
+    .quality-value {
+      display: inline-block;
+      margin-left: 0.5rem;
+      font-weight: 600;
+      color: var(--primary-red);
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      margin-top: 1.5rem;
+      background-color: var(--primary-red);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .compression-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .compression-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Compressor</h1>
+  <div class="container">
+    <label class="file-input-label" for="upload">
+      <i class="fas fa-cloud-upload-alt"></i> Choose an image to compress
+    </label>
+    <input type="file" id="upload" accept="image/*" />
+    
+    <div id="fileInfo" class="file-info" style="display: none;">
+      <p><strong>File Name:</strong> <span id="fileName"></span></p>
+      <p><strong>File Size:</strong> <span id="fileSize"></span></p>
+    </div>
+    
+    <div class="quality-control">
+      <label class="quality-label">Compression Quality: <span id="qualityValue" class="quality-value">70%</span></label>
+      <input type="range" id="qualitySlider" class="quality-slider" min="10" max="100" value="70">
+    </div>
+    
+    <div id="previewContainer">
+      <img id="preview" src="" alt="Preview" style="display:none;" />
+    </div>
+    
+    <div id="compressionInfo" class="compression-info">
+      <p><strong>Compressed Size:</strong> <span id="compressedSize"></span></p>
+      <p><strong>Size Reduction:</strong> <span id="sizeReduction"></span></p>
+    </div>
+    
+    <button id="compressBtn" disabled>Compress & Download</button>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    const upload = document.getElementById('upload');
+    const preview = document.getElementById('preview');
+    const compressBtn = document.getElementById('compressBtn');
+    const qualitySlider = document.getElementById('qualitySlider');
+    const qualityValue = document.getElementById('qualityValue');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const compressionInfo = document.getElementById('compressionInfo');
+    const compressedSize = document.getElementById('compressedSize');
+    const sizeReduction = document.getElementById('sizeReduction');
+
+    let originalFile = null;
+    let originalSize = 0;
+
+    // Update quality value display
+    qualitySlider.addEventListener('input', function() {
+      qualityValue.textContent = this.value + '%';
+    });
+
+    upload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        originalFile = file;
+        originalSize = file.size;
+        
+        // Update file info
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.style.display = 'block';
+        
+        // Update file input label
+        const fileLabel = document.querySelector('.file-input-label');
+        fileLabel.innerHTML = `<i class="fas fa-check"></i> ${file.name}`;
+        fileLabel.style.borderColor = '#4CAF50';
+        fileLabel.style.color = '#4CAF50';
+        
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          compressBtn.disabled = false;
+          compressionInfo.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    compressBtn.addEventListener('click', () => {
+      if (!originalFile) return;
+      
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.src = preview.src;
+
+      img.onload = () => {
+        // Calculate dimensions based on quality
+        const quality = parseInt(qualitySlider.value) / 100;
+        const scale = quality > 0.7 ? 1 : quality; // Only scale down for lower quality
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Convert to blob with specified quality
+        const outputQuality = parseInt(qualitySlider.value) / 100;
+        canvas.toBlob((blob) => {
+          // Update compression info
+          const newSize = blob.size;
+          compressedSize.textContent = formatFileSize(newSize);
+          
+          const reduction = ((originalSize - newSize) / originalSize * 100).toFixed(1);
+          sizeReduction.textContent = `${reduction}%`;
+          compressionInfo.style.display = 'block';
+          
+          // Create download link
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'compressed-image.jpg';
+          link.click();
+        }, 'image/jpeg', outputQuality);
+      };
+    });
+
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
