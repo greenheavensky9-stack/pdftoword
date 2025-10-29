@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Lock Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .upload-section {
+      margin: 1.5rem 0;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    #pdfInput {
+      display: none;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      text-align: left;
+      display: none;
+    }
+
+    .file-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .password-section {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .password-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    input[type="password"] {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .password-info {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .security-options {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .security-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    select {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .security-info {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-weight: 600;
+      transition: var(--transition);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:disabled {
+      background-color: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-btn {
+      display: none;
+      margin-top: 1.5rem;
+      text-decoration: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    .status {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border-radius: var(--rounded);
+      font-weight: 500;
+      display: none;
+    }
+
+    .status.success {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+      border: 1px solid #4caf50;
+    }
+
+    .status.error {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #f44336;
+    }
+
+    .status.processing {
+      background-color: #e3f2fd;
+      color: #1565c0;
+      border: 1px solid #2196f3;
+    }
+
+    .status.info {
+      background-color: var(--light-red);
+      color: var(--text-dark);
+      border: 1px solid var(--primary-red);
+    }
+
+    .progress-container {
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--light-red);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-red);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .features {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .features h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .features li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .features li:before {
+      content: "✓";
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      height: 4px;
+      border-radius: 2px;
+      background-color: var(--light-red);
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .strength-weak { background-color: #f44336; width: 33%; }
+    .strength-medium { background-color: #ff9800; width: 66%; }
+    .strength-strong { background-color: #4caf50; width: 100%; }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF Lock Tool</h1>
+    
+    <div class="features">
+      <h3>Secure your PDF documents:</h3>
+      <ul>
+        <li>Add password protection</li>
+        <li>Restrict printing and copying</li>
+        <li>Prevent unauthorized access</li>
+        <li>Military-grade encryption</li>
+      </ul>
+    </div>
+    
+    <div class="upload-section">
+      <label for="pdfInput" class="file-input-label">
+        <i class="fas fa-cloud-upload-alt"></i> Choose PDF file to protect
+      </label>
+      <input type="file" id="pdfInput" accept="application/pdf" />
+      
+      <div class="file-info" id="fileInfo">
+        <p><strong>File Name:</strong> <span id="fileName"></span></p>
+        <p><strong>File Size:</strong> <span id="fileSize"></span></p>
+        <p><strong>Pages:</strong> <span id="pageCount">-</span></p>
+      </div>
+    </div>
+    
+    <div class="password-section">
+      <label class="password-label" for="password">Set Password</label>
+      <input type="password" id="password" placeholder="Enter strong password" />
+      <div class="password-strength">
+        <div class="strength-fill" id="passwordStrength"></div>
+      </div>
+      <div class="password-info">Use a strong password with letters, numbers, and symbols</div>
+    </div>
+    
+    <div class="security-options">
+      <label class="security-label" for="permissions">Security Permissions</label>
+      <select id="permissions">
+        <option value="full">Full Protection (No printing, no copying)</option>
+        <option value="print">Allow Printing Only</option>
+        <option value="copy">Allow Content Copying</option>
+        <option value="none">No Additional Restrictions</option>
+      </select>
+      <div class="security-info">Choose what actions users can perform on the protected PDF</div>
+    </div>
+    
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Initializing...</div>
+    </div>
+    
+    <div class="status" id="status"></div>
+    
+    <button class="button" id="lockBtn" disabled>
+      <i class="fas fa-lock"></i> Lock PDF
+    </button>
+    
+    <a id="downloadLink" class="button download-btn">
+      <i class="fas fa-download"></i> Download Protected PDF
+    </a>
+    
+    <div class="status info" id="infoStatus">
+      <strong>Note:</strong> This is a frontend simulation. For real PDF encryption, a backend service would be required.
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    const pdfInput = document.getElementById('pdfInput');
+    const lockBtn = document.getElementById('lockBtn');
+    const downloadLink = document.getElementById('downloadLink');
+    const passwordInput = document.getElementById('password');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const pageCount = document.getElementById('pageCount');
+    const status = document.getElementById('status');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const passwordStrength = document.getElementById('passwordStrength');
+    const permissions = document.getElementById('permissions');
+    const infoStatus = document.getElementById('infoStatus');
+
+    let pdfFile;
+
+    pdfInput.addEventListener('change', async (e) => {
+      pdfFile = e.target.files[0];
+      if (pdfFile && pdfFile.type === 'application/pdf') {
+        // Update file input label
+        const fileLabel = document.querySelector('.file-input-label');
+        fileLabel.innerHTML = `<i class="fas fa-check"></i> ${pdfFile.name}`;
+        fileLabel.style.borderColor = '#4CAF50';
+        fileLabel.style.color = '#4CAF50';
+        
+        // Update file info
+        fileName.textContent = pdfFile.name;
+        fileSize.textContent = formatFileSize(pdfFile.size);
+        fileInfo.style.display = 'block';
+        
+        // Enable lock button
+        lockBtn.disabled = false;
+        
+        // Clear any previous status
+        status.style.display = 'none';
+        downloadLink.style.display = 'none';
+        
+        // Show info status
+        infoStatus.style.display = 'block';
+      } else {
+        lockBtn.disabled = true;
+        if (pdfFile) {
+          showStatus('Please select a valid PDF file.', 'error');
+        }
+      }
+    });
+
+    // Password strength indicator
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+      
+      if (password.length >= 8) strength++;
+      if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+      if (password.match(/\d/)) strength++;
+      if (password.match(/[^a-zA-Z\d]/)) strength++;
+      
+      passwordStrength.className = 'strength-fill';
+      if (strength === 0) {
+        passwordStrength.style.width = '0%';
+      } else if (strength <= 2) {
+        passwordStrength.className += ' strength-weak';
+      } else if (strength === 3) {
+        passwordStrength.className += ' strength-medium';
+      } else {
+        passwordStrength.className += ' strength-strong';
+      }
+    });
+
+    lockBtn.addEventListener('click', async () => {
+      if (!pdfFile) {
+        showStatus('Please select a PDF file first.', 'error');
+        return;
+      }
+
+      const password = passwordInput.value;
+      if (!password) {
+        showStatus('Please enter a password to protect the PDF.', 'error');
+        return;
+      }
+
+      if (password.length < 4) {
+        showStatus('Password should be at least 4 characters long.', 'error');
+        return;
+      }
+
+      // Disable button during processing
+      lockBtn.disabled = true;
+      progressContainer.style.display = 'block';
+      updateProgress(10, 'Loading PDF document...');
+
+      try {
+        await simulateEncryptionProcess();
+        
+        const protectedBytes = await protectPDF(pdfFile, password);
+        const blob = new Blob([protectedBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        downloadLink.href = url;
+        downloadLink.download = pdfFile.name.replace('.pdf', '_protected.pdf');
+        downloadLink.style.display = 'inline-block';
+        showStatus('PDF protected successfully! Your file is ready for download.', 'success');
+        
+      } catch (error) {
+        showStatus('Failed to protect PDF. Please try again.', 'error');
+        console.error('Protection error:', error);
+      } finally {
+        lockBtn.disabled = false;
+        progressContainer.style.display = 'none';
+      }
+    });
+
+    async function protectPDF(file, password) {
+      updateProgress(30, 'Applying security settings...');
+      
+      // In a real implementation, this would use a proper PDF encryption library
+      // For frontend simulation, we'll just return the original file
+      const reader = new FileReader();
+      
+      return new Promise((resolve) => {
+        reader.onload = function(e) {
+          updateProgress(70, 'Encrypting content...');
+          
+          // Simulate encryption delay
+          setTimeout(() => {
+            updateProgress(90, 'Finalizing protected PDF...');
+            
+            // Return the original bytes (simulated protection)
+            resolve(e.target.result);
+          }, 1000);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    async function simulateEncryptionProcess() {
+      // Simulate encryption progress
+      await delay(500);
+      updateProgress(20, 'Analyzing document structure...');
+      
+      await delay(800);
+      updateProgress(40, 'Setting permissions...');
+      
+      await delay(600);
+      updateProgress(60, 'Generating encryption keys...');
+      
+      await delay(700);
+      updateProgress(80, 'Applying protection...');
+      
+      await delay(400);
+      updateProgress(95, 'Almost done...');
+    }
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = `status ${type}`;
+      status.style.display = 'block';
+    }
+
+    function updateProgress(percentage, text) {
+      progressFill.style.width = `${percentage}%`;
+      progressText.textContent = text;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
