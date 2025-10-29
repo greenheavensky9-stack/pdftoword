@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Color Picker from Image - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .upload-section {
+      margin: 1.5rem 0;
+    }
+
+    .file-input-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .file-input:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+
+    .file-input::file-selector-button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .file-input::file-selector-button:hover {
+      background-color: var(--dark-red);
+    }
+
+    .preview-section {
+      margin: 1.5rem 0;
+      display: none;
+    }
+
+    .canvas-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid var(--light-red);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      cursor: crosshair;
+      transition: var(--transition);
+    }
+
+    canvas:hover {
+      border-color: var(--primary-red);
+    }
+
+    .color-results {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .color-display {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .color-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--rounded);
+      border: 3px solid var(--light-red);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .color-preview:hover {
+      transform: scale(1.05);
+      border-color: var(--primary-red);
+    }
+
+    .color-formats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .format-card {
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .format-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .format-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--rounded);
+      transition: var(--transition);
+    }
+
+    .format-value:hover {
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+
+    .color-history {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .history-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .history-color {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .history-color:hover {
+      transform: scale(1.1);
+      border-color: var(--primary-red);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-red);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(0);
+    }
+
+    .instructions {
+      margin: 1rem 0;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .instructions p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .color-formats {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+      }
+      
+      .color-display {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .color-preview {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .history-color {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Color Picker from Image</h1>
+    
+    <div class="calculator-info">
+      <h3>Extract colors from any image:</h3>
+      <ul>
+        <li>Upload any image file (JPG, PNG, etc.)</li>
+        <li>Click anywhere on the image to pick colors</li>
+        <li>Get color codes in multiple formats</li>
+        <li>Save your favorite colors to history</li>
+      </ul>
+    </div>
+    
+    <div class="upload-section">
+      <div class="file-input-container">
+        <input type="file" id="imageInput" class="file-input" accept="image/*" />
+      </div>
+      
+      <div class="instructions">
+        <p><i class="fas fa-info-circle"></i> Upload an image, then click anywhere on it to pick colors</p>
+      </div>
+    </div>
+    
+    <div class="preview-section" id="previewSection">
+      <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+    
+    <div class="color-results" id="colorResults">
+      <div class="result-title">Picked Color</div>
+      
+      <div class="color-display">
+        <div class="color-preview" id="colorPreview"></div>
+        
+        <div class="color-formats">
+          <div class="format-card">
+            <div class="format-label">HEX Color</div>
+            <div class="format-value" id="hexCode" onclick="copyToClipboard('hexCode')">#FFFFFF</div>
+          </div>
+          <div class="format-card">
+            <div class="format-label">RGB Color</div>
+            <div class="format-value" id="rgbCode" onclick="copyToClipboard('rgbCode')">rgb(255, 255, 255)</div>
+          </div>
+          <div class="format-card">
+            <div class="format-label">HSL Color</div>
+            <div class="format-value" id="hslCode" onclick="copyToClipboard('hslCode')">hsl(0, 0%, 100%)</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="button" onclick="addToHistory()">
+          <i class="fas fa-save"></i> Save to History
+        </button>
+        <button class="button button-secondary" onclick="copyAllFormats()">
+          <i class="fas fa-copy"></i> Copy All Formats
+        </button>
+        <button class="button button-clear" onclick="clearImage()">
+          <i class="fas fa-eraser"></i> Clear Image
+        </button>
+      </div>
+    </div>
+
+    <div class="color-history" id="colorHistory">
+      <div class="history-title">Color History</div>
+      <div class="history-grid" id="historyGrid">
+        <!-- Color history will be populated here -->
+      </div>
+      
+      <div class="button-group">
+        <button class="button button-clear" onclick="clearHistory()">
+          <i class="fas fa-trash"></i> Clear History
+        </button>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> Color code copied!
+  </div>
+
+  <script>
+    const imageInput = document.getElementById("imageInput");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const previewSection = document.getElementById("previewSection");
+    const colorResults = document.getElementById("colorResults");
+    const colorPreview = document.getElementById("colorPreview");
+    const hexCode = document.getElementById("hexCode");
+    const rgbCode = document.getElementById("rgbCode");
+    const hslCode = document.getElementById("hslCode");
+    const copyNotification = document.getElementById("copyNotification");
+    const historyGrid = document.getElementById("historyGrid");
+
+    let currentColor = null;
+    let colorHistory = [];
+
+    imageInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      // Check if file is an image
+      if (!file.type.match('image.*')) {
+        showNotification("Please select a valid image file.", true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          // Calculate dimensions to fit within 600px width while maintaining aspect ratio
+          const maxWidth = 600;
+          const scale = Math.min(maxWidth / img.width, 1);
+          const scaledWidth = img.width * scale;
+          const scaledHeight = img.height * scale;
+
+          canvas.width = scaledWidth;
+          canvas.height = scaledHeight;
+          ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+          
+          // Show preview section
+          previewSection.style.display = 'block';
+          showNotification("Image loaded successfully! Click anywhere to pick colors.");
+        };
+        img.onerror = function() {
+          showNotification("Error loading image. Please try another file.", true);
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = function() {
+        showNotification("Error reading file. Please try again.", true);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    canvas.addEventListener("click", function (e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const r = pixel[0];
+      const g = pixel[1];
+      const b = pixel[2];
+      
+      currentColor = { r, g, b };
+      updateColorDisplay(r, g, b);
+      
+      // Show color results
+      colorResults.style.display = 'block';
+    });
+
+    function updateColorDisplay(r, g, b) {
+      const hex = rgbToHex(r, g, b);
+      const hsl = rgbToHsl(r, g, b);
+      
+      // Update preview
+      colorPreview.style.backgroundColor = hex;
+      
+      // Update format displays
+      hexCode.textContent = hex;
+      rgbCode.textContent = `rgb(${r}, ${g}, ${b})`;
+      hslCode.textContent = `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }).join("").toUpperCase();
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255;
+      g /= 255;
+      b /= 255;
+      
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0; // achromatic
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        
+        h /= 6;
+      }
+
+      return {
+        h: h * 360,
+        s: s * 100,
+        l: l * 100
+      };
+    }
+
+    function addToHistory() {
+      if (!currentColor) {
+        showNotification("Please pick a color first!", true);
+        return;
+      }
+      
+      const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+      
+      // Avoid duplicates
+      if (!colorHistory.includes(hex)) {
+        colorHistory.unshift(hex);
+        
+        // Keep only last 15 colors
+        if (colorHistory.length > 15) {
+          colorHistory.pop();
+        }
+        
+        updateHistoryDisplay();
+        showNotification("Color added to history!");
+      } else {
+        showNotification("Color already in history!");
+      }
+    }
+
+    function updateHistoryDisplay() {
+      historyGrid.innerHTML = '';
+      colorHistory.forEach(color => {
+        const colorElement = document.createElement('div');
+        colorElement.className = 'history-color';
+        colorElement.style.backgroundColor = color;
+        colorElement.title = color;
+        colorElement.addEventListener('click', () => {
+          // Convert hex back to RGB
+          const r = parseInt(color.substr(1, 2), 16);
+          const g = parseInt(color.substr(3, 2), 16);
+          const b = parseInt(color.substr(5, 2), 16);
+          
+          currentColor = { r, g, b };
+          updateColorDisplay(r, g, b);
+          colorResults.style.display = 'block';
+          showNotification("Color loaded from history!");
+        });
+        historyGrid.appendChild(colorElement);
+      });
+    }
+
+    function clearHistory() {
+      colorHistory = [];
+      updateHistoryDisplay();
+      showNotification("Color history cleared!");
+    }
+
+    function clearImage() {
+      imageInput.value = '';
+      previewSection.style.display = 'none';
+      colorResults.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      showNotification("Image cleared!");
+    }
+
+    function copyToClipboard(elementId) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("Color code copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        showNotification("Failed to copy color code!", true);
+      });
+    }
+
+    function copyAllFormats() {
+      if (!currentColor) {
+        showNotification("Please pick a color first!", true);
+        return;
+      }
+      
+      const text = `HEX: ${hexCode.textContent}\nRGB: ${rgbCode.textContent}\nHSL: ${hslCode.textContent}`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("All color formats copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        showNotification("Failed to copy color formats!", true);
+      });
+    }
+
+    function showNotification(message, isError = false) {
+      copyNotification.textContent = message;
+      copyNotification.style.background = isError ? '#e53e3e' : 'var(--primary-red)';
+      copyNotification.classList.add('show');
+      
+      setTimeout(() => {
+        copyNotification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize history display
+    updateHistoryDisplay();
+
+    // Add drag and drop support
+    canvas.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      canvas.style.borderColor = 'var(--primary-red)';
+    });
+
+    canvas.addEventListener('dragleave', () => {
+      canvas.style.borderColor = 'var(--light-red)';
+    });
+
+    canvas.addEventListener('drop', (e) => {
+      e.preventDefault();
+      canvas.style.borderColor = 'var(--light-red)';
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        imageInput.files = files;
+        const event = new Event('change');
+        imageInput.dispatchEvent(event);
+      }
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
