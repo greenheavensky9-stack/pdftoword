@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTML/CSS/JS Minifier - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 200px;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .button-html {
+      background-color: #e34c26;
+    }
+
+    .button-html:hover {
+      background-color: #c53727;
+    }
+
+    .button-css {
+      background-color: #264de4;
+    }
+
+    .button-css:hover {
+      background-color: #1b3db6;
+    }
+
+    .button-js {
+      background-color: #f0db4f;
+      color: #323330;
+    }
+
+    .button-js:hover {
+      background-color: #e6c73a;
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .minified-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .minified-value {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.4;
+      font-family: 'Courier New', monospace;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-red);
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .language-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .language-tab {
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      transition: var(--transition);
+      border: 1px solid var(--light-red);
+    }
+
+    .language-tab.active {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border-color: var(--primary-red);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .language-tabs {
+        justify-content: center;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>HTML/CSS/JS Minifier</h1>
+    
+    <div class="calculator-info">
+      <h3>Optimize your code for production:</h3>
+      <ul>
+        <li>Remove unnecessary whitespace and comments</li>
+        <li>Reduce file size for faster loading</li>
+        <li>Support for HTML, CSS, and JavaScript</li>
+        <li>Detailed compression statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="language-tabs">
+        <div class="language-tab active" onclick="setLanguage('auto')">Auto Detect</div>
+        <div class="language-tab" onclick="setLanguage('html')">HTML</div>
+        <div class="language-tab" onclick="setLanguage('css')">CSS</div>
+        <div class="language-tab" onclick="setLanguage('js')">JavaScript</div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label" for="textBox">Enter Your Code</label>
+        <div 
+          class="text-area" 
+          id="textBox" 
+          contenteditable="true" 
+          placeholder="Paste your HTML, CSS, or JavaScript code here..."
+        ></div>
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <input type="checkbox" id="removeComments" checked>
+          <label class="option-label" for="removeComments">Remove Comments</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="removeWhitespace" checked>
+          <label class="option-label" for="removeWhitespace">Remove Extra Whitespace</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="preserveImportant" checked>
+          <label class="option-label" for="preserveImportant">Preserve Important Comments</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button" onclick="minifyCode()">
+        <i class="fas fa-compress-alt"></i> Minify Code
+      </button>
+      <button class="button button-html" onclick="minifyHTML()">
+        <i class="fab fa-html5"></i> Minify HTML
+      </button>
+      <button class="button button-css" onclick="minifyCSS()">
+        <i class="fab fa-css3-alt"></i> Minify CSS
+      </button>
+      <button class="button button-js" onclick="minifyJS()">
+        <i class="fab fa-js-square"></i> Minify JS
+      </button>
+      <button class="button button-clear" onclick="clearText()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyMinified()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title" id="resultTitle">Minified Code</div>
+      
+      <div class="minified-display">
+        <div class="minified-value" id="minifiedValue">Your minified code will appear here...</div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="originalSize">0</div>
+          <div class="stat-label">Original Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="minifiedSize">0</div>
+          <div class="stat-label">Minified Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="savings">0</div>
+          <div class="stat-label">Bytes Saved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="reduction">0%</div>
+          <div class="stat-label">Reduction</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> Reduced code size by <strong id="savingsSummary">0 bytes</strong> (<strong id="reductionSummary">0%</strong>)</p>
+        <p><i class="fas fa-bolt"></i> Minified <strong id="languageType">code</strong> for optimal performance</p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let currentLanguage = 'auto';
+    let originalCode = '';
+    let minifiedCode = '';
+
+    function getTextContent() {
+      return document.getElementById("textBox").innerText;
+    }
+
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      
+      // Update active tab
+      document.querySelectorAll('.language-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update placeholder based on language
+      const textBox = document.getElementById("textBox");
+      switch(lang) {
+        case 'html':
+          textBox.setAttribute('placeholder', 'Paste your HTML code here...');
+          break;
+        case 'css':
+          textBox.setAttribute('placeholder', 'Paste your CSS code here...');
+          break;
+        case 'js':
+          textBox.setAttribute('placeholder', 'Paste your JavaScript code here...');
+          break;
+        default:
+          textBox.setAttribute('placeholder', 'Paste your HTML, CSS, or JavaScript code here...');
+      }
+    }
+
+    function updateStats(original, minified, language) {
+      const originalSize = original.length;
+      const minifiedSize = minified.length;
+      const savings = originalSize - minifiedSize;
+      const reduction = originalSize > 0 ? Math.round((savings / originalSize) * 100) : 0;
+      
+      document.getElementById("originalSize").textContent = formatBytes(originalSize);
+      document.getElementById("minifiedSize").textContent = formatBytes(minifiedSize);
+      document.getElementById("savings").textContent = formatBytes(savings);
+      document.getElementById("reduction").textContent = reduction + '%';
+      
+      document.getElementById("savingsSummary").textContent = formatBytes(savings);
+      document.getElementById("reductionSummary").textContent = reduction + '%';
+      document.getElementById("languageType").textContent = language.toUpperCase();
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function minifyHTML(code) {
+      const removeComments = document.getElementById("removeComments").checked;
+      const removeWhitespace = document.getElementById("removeWhitespace").checked;
+      const preserveImportant = document.getElementById("preserveImportant").checked;
+      
+      let minified = code;
+      
+      // Remove comments (preserve important ones if needed)
+      if (removeComments) {
+        if (preserveImportant) {
+          minified = minified.replace(/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->)(.|\n))*-->/g, '');
+        } else {
+          minified = minified.replace(/<!--[\s\S]*?-->/g, '');
+        }
+      }
+      
+      // Remove whitespace
+      if (removeWhitespace) {
+        minified = minified
+          .replace(/\s+/g, ' ')
+          .replace(/>\s+</g, '><')
+          .trim();
+      }
+      
+      return minified;
+    }
+
+    function minifyCSS(code) {
+      const removeComments = document.getElementById("removeComments").checked;
+      const removeWhitespace = document.getElementById("removeWhitespace").checked;
+      const preserveImportant = document.getElementById("preserveImportant").checked;
+      
+      let minified = code;
+      
+      // Remove comments (preserve important ones if needed)
+      if (removeComments) {
+        if (preserveImportant) {
+          minified = minified.replace(/\/\*(?!\s*\*)[\s\S]*?\*\//g, '');
+        } else {
+          minified = minified.replace(/\/\*[\s\S]*?\*\//g, '');
+        }
+      }
+      
+      // Remove whitespace
+      if (removeWhitespace) {
+        minified = minified
+          .replace(/\s+/g, ' ')
+          .replace(/\s*{\s*/g, '{')
+          .replace(/\s*}\s*/g, '}')
+          .replace(/\s*;\s*/g, ';')
+          .replace(/\s*:\s*/g, ':')
+          .replace(/,\s*/g, ',')
+          .trim();
+      }
+      
+      return minified;
+    }
+
+    function minifyJS(code) {
+      const removeComments = document.getElementById("removeComments").checked;
+      const removeWhitespace = document.getElementById("removeWhitespace").checked;
+      const preserveImportant = document.getElementById("preserveImportant").checked;
+      
+      let minified = code;
+      
+      // Remove comments
+      if (removeComments) {
+        if (preserveImportant) {
+          // Preserve comments starting with /*!
+          minified = minified.replace(/\/\/(.*)/g, '');
+          minified = minified.replace(/\/\*(?!\s*!)[\s\S]*?\*\//g, '');
+        } else {
+          minified = minified.replace(/\/\/(.*)/g, '');
+          minified = minified.replace(/\/\*[\s\S]*?\*\//g, '');
+        }
+      }
+      
+      // Remove whitespace
+      if (removeWhitespace) {
+        minified = minified
+          .replace(/\s+/g, ' ')
+          .replace(/\s*{\s*/g, '{')
+          .replace(/\s*}\s*/g, '}')
+          .replace(/\s*;\s*/g, ';')
+          .replace(/\s*=\s*/g, '=')
+          .replace(/\s*\+\s*/g, '+')
+          .replace(/\s*-\s*/g, '-')
+          .replace(/\s*\/\s*/g, '/')
+          .replace(/\s*\*\s*/g, '*')
+          .trim();
+      }
+      
+      return minified;
+    }
+
+    function detectLanguage(code) {
+      if (currentLanguage !== 'auto') {
+        return currentLanguage;
+      }
+      
+      if (code.includes('<!DOCTYPE') || code.includes('<html') || code.match(/<[a-z][\s\S]*>/i)) {
+        return 'html';
+      } else if (code.includes('{') && code.includes('}') && (code.includes(':') || code.includes('@'))) {
+        return 'css';
+      } else if (code.includes('function') || code.includes('var ') || code.includes('const ') || code.includes('let ')) {
+        return 'js';
+      }
+      return 'html'; // default
+    }
+
+    function minifyCode() {
+      originalCode = getTextContent();
+      
+      if (!originalCode.trim()) {
+        showResult("Please enter some code to minify.");
+        return;
+      }
+      
+      const language = detectLanguage(originalCode);
+      let result;
+      
+      switch(language) {
+        case 'html':
+          result = minifyHTML(originalCode);
+          break;
+        case 'css':
+          result = minifyCSS(originalCode);
+          break;
+        case 'js':
+          result = minifyJS(originalCode);
+          break;
+        default:
+          result = originalCode;
+      }
+      
+      minifiedCode = result;
+      document.getElementById("minifiedValue").textContent = minifiedCode;
+      document.getElementById("resultTitle").textContent = `Minified ${language.toUpperCase()} Code`;
+      
+      updateStats(originalCode, minifiedCode, language);
+      document.getElementById("resultSection").style.display = 'block';
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function minifyHTML() {
+      currentLanguage = 'html';
+      minifyCode();
+    }
+
+    function minifyCSS() {
+      currentLanguage = 'css';
+      minifyCode();
+    }
+
+    function minifyJS() {
+      currentLanguage = 'js';
+      minifyCode();
+    }
+
+    function clearText() {
+      document.getElementById("textBox").innerText = '';
+      document.getElementById("minifiedValue").textContent = 'Your minified code will appear here...';
+      document.getElementById("resultSection").style.display = 'none';
+      originalCode = '';
+      minifiedCode = '';
+    }
+
+    function copyMinified() {
+      const text = document.getElementById("minifiedValue").textContent;
+      if (text && text !== 'Your minified code will appear here...') {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Minified code copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy code: ', err);
+          alert('Failed to copy code to clipboard.');
+        });
+      } else {
+        alert('Please minify some code first.');
+      }
+    }
+
+    function showResult(message) {
+      document.getElementById("minifiedValue").textContent = message;
+      document.getElementById("resultSection").style.display = 'block';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textBox = document.getElementById("textBox");
+      textBox.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textBox.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
