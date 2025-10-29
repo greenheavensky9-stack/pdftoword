@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Converter Tool - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      background-color: #f8fafc;
+      color: var(--text-dark);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 1rem;
+      box-sizing: border-box;
+      margin: 0;
+    }
+    
+    .container {
+      padding: 2rem;
+      border-radius: var(--rounded);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      background-color: var(--white);
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      color: var(--primary-red);
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    input, select, button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border: 2px solid var(--light-red);
+      border-radius: var(--rounded);
+      font-size: 1rem;
+      color: var(--text-dark);
+      background-color: var(--white);
+      transition: var(--transition);
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-red);
+    }
+    
+    button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+    }
+    
+    button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    img {
+      max-width: 100%;
+      margin-top: 1rem;
+      border-radius: var(--rounded);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .download-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-red);
+      color: var(--white);
+      text-align: center;
+      border-radius: var(--rounded);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .download-btn:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .preview-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--light-red);
+    }
+    
+    .preview-section p {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+    
+    .format-label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    
+    .file-input-label {
+      display: block;
+      padding: 0.75rem;
+      border: 2px dashed var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+    }
+    
+    .file-input-label:hover {
+      border-color: var(--primary-red);
+      background-color: var(--light-red);
+    }
+    
+    #imageInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Converter Tool</h1>
+    
+    <label class="file-input-label" for="imageInput">
+      <i class="fas fa-cloud-upload-alt"></i> Choose an image file
+    </label>
+    <input type="file" id="imageInput" accept="image/*" />
+    
+    <label class="format-label">Convert to:</label>
+    <select id="formatSelect">
+      <option value="png">PNG</option>
+      <option value="jpeg">JPG</option>
+      <option value="gif">GIF</option>
+      <option value="webp">WebP</option>
+    </select>
+    
+    <button onclick="convertImage()">Convert Image</button>
+
+    <div id="previewContainer" class="preview-section"></div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalFile;
+
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+      originalFile = e.target.files[0];
+      const previewContainer = document.getElementById('previewContainer');
+      
+      if (originalFile) {
+        const fileLabel = document.querySelector('.file-input-label');
+        fileLabel.innerHTML = `<i class="fas fa-check"></i> ${originalFile.name}`;
+        fileLabel.style.borderColor = '#4CAF50';
+        fileLabel.style.color = '#4CAF50';
+        
+        previewContainer.innerHTML = '<p>Original Preview:</p>' + 
+          '<img src="' + URL.createObjectURL(originalFile) + '" alt="Original Image">';
+      }
+    });
+
+    function convertImage() {
+      if (!originalFile) return alert("Please upload an image first.");
+
+      const format = document.getElementById("formatSelect").value;
+      const reader = new FileReader();
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+
+      reader.onload = function(event) {
+        img.onload = function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+
+          canvas.toBlob(function(blob) {
+            const convertedUrl = URL.createObjectURL(blob);
+            const previewContainer = document.getElementById("previewContainer");
+            previewContainer.innerHTML += '<p>Converted Preview:</p>' +
+              '<img src="' + convertedUrl + '" alt="Converted Image">' +
+              '<a class="download-btn" href="' + convertedUrl + '" download="converted-image.' + format + '">Download Converted Image</a>';
+          }, 'image/' + format);
+        };
+        img.src = event.target.result;
+      };
+
+      reader.readAsDataURL(originalFile);
+    }
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
