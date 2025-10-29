@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JSON Formatter & Validator - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 200px;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-validate {
+      background-color: #2ecc71;
+    }
+
+    .button-validate:hover {
+      background-color: #27ae60;
+    }
+
+    .button-minify {
+      background-color: #3498db;
+    }
+
+    .button-minify:hover {
+      background-color: #2980b9;
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+      display: none;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .json-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: #2d3748;
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .error-display {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: #fed7d7;
+      border-radius: var(--rounded);
+      border: 2px solid #e53e3e;
+      text-align: left;
+      color: #c53030;
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .error-summary {
+      background-color: #fed7d7;
+      border: 1px solid #e53e3e;
+    }
+
+    .error-summary p {
+      color: #c53030;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-item input[type="number"] {
+      width: 60px;
+      padding: 0.5rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      text-align: center;
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .validation-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--rounded);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge-valid {
+      background-color: #c6f6d5;
+      color: #276749;
+      border: 1px solid #9ae6b4;
+    }
+
+    .badge-invalid {
+      background-color: #fed7d7;
+      color: #c53030;
+      border: 1px solid #feb2b2;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>JSON Formatter & Validator</h1>
+    
+    <div class="calculator-info">
+      <h3>Work with JSON data effectively:</h3>
+      <ul>
+        <li>Format and validate JSON data</li>
+        <li>Syntax highlighting and error detection</li>
+        <li>Minify JSON for production</li>
+        <li>Detailed validation statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="textBox">Enter Your JSON</label>
+        <div 
+          class="text-area" 
+          id="textBox" 
+          contenteditable="true" 
+          placeholder='Paste your JSON data here... Example: {"name": "John", "age": 30, "city": "New York"}'
+        ></div>
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <label class="option-label" for="indentSize">Indent Size:</label>
+          <input type="number" id="indentSize" value="2" min="1" max="8">
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="sortKeys" checked>
+          <label class="option-label" for="sortKeys">Sort Object Keys</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="validateOnType">
+          <label class="option-label" for="validateOnType">Validate as You Type</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button" onclick="formatJSON()">
+        <i class="fas fa-code"></i> Format JSON
+      </button>
+      <button class="button button-validate" onclick="validateJSON()">
+        <i class="fas fa-check-circle"></i> Validate JSON
+      </button>
+      <button class="button button-minify" onclick="minifyJSON()">
+        <i class="fas fa-compress-alt"></i> Minify JSON
+      </button>
+      <button class="button button-secondary" onclick="beautifyJSON()">
+        <i class="fas fa-paint-brush"></i> Beautify
+      </button>
+      <button class="button button-clear" onclick="clearJSON()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyJSON()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="validation-badge" id="validationBadge">
+        <i class="fas fa-check-circle"></i> JSON is Valid
+      </div>
+      
+      <div class="result-title" id="resultTitle">Formatted JSON</div>
+      
+      <div class="json-display" id="jsonDisplay">
+        Your formatted JSON will appear here...
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="originalSize">0</div>
+          <div class="stat-label">Original Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="formattedSize">0</div>
+          <div class="stat-label">Formatted Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="objectCount">0</div>
+          <div class="stat-label">Objects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="arrayCount">0</div>
+          <div class="stat-label">Arrays</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> JSON contains <strong id="keyCount">0 keys</strong> across <strong id="depth">1 level</strong> of nesting</p>
+        <p><i class="fas fa-shield-alt"></i> <span id="validationStatus">Valid JSON syntax with proper formatting</span></p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    let originalJSON = '';
+    let formattedJSON = '';
+    let isValidJSON = false;
+
+    function getTextContent() {
+      return document.getElementById("textBox").innerText;
+    }
+
+    function updateStats(jsonString, jsonObject) {
+      const originalSize = originalJSON.length;
+      const formattedSize = jsonString.length;
+      
+      // Count objects and arrays
+      let objectCount = 0;
+      let arrayCount = 0;
+      let keyCount = 0;
+      let maxDepth = 0;
+      
+      function traverse(obj, depth = 0) {
+        maxDepth = Math.max(maxDepth, depth);
+        
+        if (typeof obj === 'object' && obj !== null) {
+          if (Array.isArray(obj)) {
+            arrayCount++;
+            obj.forEach(item => traverse(item, depth + 1));
+          } else {
+            objectCount++;
+            keyCount += Object.keys(obj).length;
+            Object.values(obj).forEach(value => traverse(value, depth + 1));
+          }
+        }
+      }
+      
+      if (jsonObject) {
+        traverse(jsonObject);
+      }
+      
+      document.getElementById("originalSize").textContent = formatBytes(originalSize);
+      document.getElementById("formattedSize").textContent = formatBytes(formattedSize);
+      document.getElementById("objectCount").textContent = objectCount;
+      document.getElementById("arrayCount").textContent = arrayCount;
+      document.getElementById("keyCount").textContent = keyCount;
+      document.getElementById("depth").textContent = maxDepth + ' level' + (maxDepth !== 1 ? 's' : '');
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function formatJSON() {
+      originalJSON = getTextContent().trim();
+      
+      if (!originalJSON) {
+        showError("Please enter some JSON data to format.");
+        return;
+      }
+      
+      try {
+        const indentSize = parseInt(document.getElementById("indentSize").value) || 2;
+        const sortKeys = document.getElementById("sortKeys").checked;
+        
+        const jsonObject = JSON.parse(originalJSON);
+        
+        // Create a replacer function for sorting keys if needed
+        const replacer = sortKeys ? 
+          (key, value) => {
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+              return Object.keys(value).sort().reduce((sorted, key) => {
+                sorted[key] = value[key];
+                return sorted;
+              }, {});
+            }
+            return value;
+          } : null;
+        
+        formattedJSON = JSON.stringify(jsonObject, replacer, indentSize);
+        
+        document.getElementById("jsonDisplay").textContent = formattedJSON;
+        document.getElementById("resultTitle").textContent = "Formatted JSON";
+        document.getElementById("validationBadge").className = "validation-badge badge-valid";
+        document.getElementById("validationBadge").innerHTML = '<i class="fas fa-check-circle"></i> JSON is Valid';
+        document.getElementById("validationStatus").textContent = "Valid JSON syntax with proper formatting";
+        document.getElementById("summary").className = "summary";
+        
+        updateStats(formattedJSON, jsonObject);
+        isValidJSON = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid JSON: " + e.message);
+      }
+    }
+
+    function validateJSON() {
+      originalJSON = getTextContent().trim();
+      
+      if (!originalJSON) {
+        showError("Please enter some JSON data to validate.");
+        return;
+      }
+      
+      try {
+        const jsonObject = JSON.parse(originalJSON);
+        const indentSize = parseInt(document.getElementById("indentSize").value) || 2;
+        formattedJSON = JSON.stringify(jsonObject, null, indentSize);
+        
+        document.getElementById("jsonDisplay").textContent = formattedJSON;
+        document.getElementById("resultTitle").textContent = "Valid JSON";
+        document.getElementById("validationBadge").className = "validation-badge badge-valid";
+        document.getElementById("validationBadge").innerHTML = '<i class="fas fa-check-circle"></i> JSON is Valid';
+        document.getElementById("validationStatus").textContent = "Valid JSON syntax - no errors found";
+        document.getElementById("summary").className = "summary";
+        
+        updateStats(formattedJSON, jsonObject);
+        isValidJSON = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid JSON: " + e.message);
+      }
+    }
+
+    function minifyJSON() {
+      originalJSON = getTextContent().trim();
+      
+      if (!originalJSON) {
+        showError("Please enter some JSON data to minify.");
+        return;
+      }
+      
+      try {
+        const jsonObject = JSON.parse(originalJSON);
+        formattedJSON = JSON.stringify(jsonObject);
+        
+        document.getElementById("jsonDisplay").textContent = formattedJSON;
+        document.getElementById("resultTitle").textContent = "Minified JSON";
+        document.getElementById("validationBadge").className = "validation-badge badge-valid";
+        document.getElementById("validationBadge").innerHTML = '<i class="fas fa-check-circle"></i> JSON is Valid';
+        document.getElementById("validationStatus").textContent = "Minified JSON - all whitespace removed";
+        document.getElementById("summary").className = "summary";
+        
+        updateStats(formattedJSON, jsonObject);
+        isValidJSON = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid JSON: " + e.message);
+      }
+    }
+
+    function beautifyJSON() {
+      originalJSON = getTextContent().trim();
+      
+      if (!originalJSON) {
+        showError("Please enter some JSON data to beautify.");
+        return;
+      }
+      
+      try {
+        const jsonObject = JSON.parse(originalJSON);
+        formattedJSON = JSON.stringify(jsonObject, null, 2);
+        
+        // Add syntax highlighting (basic)
+        const highlighted = formattedJSON
+          .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?)/g, '<span style="color: #63b3ed;">$1</span>')
+          .replace(/\b(true|false|null)\b/g, '<span style="color: #fbb6ce;">$1</span>')
+          .replace(/\b(\d+)\b/g, '<span style="color: #68d391;">$1</span>');
+        
+        document.getElementById("jsonDisplay").innerHTML = highlighted;
+        document.getElementById("resultTitle").textContent = "Beautified JSON";
+        document.getElementById("validationBadge").className = "validation-badge badge-valid";
+        document.getElementById("validationBadge").innerHTML = '<i class="fas fa-check-circle"></i> JSON is Valid';
+        document.getElementById("validationStatus").textContent = "Beautified JSON with syntax highlighting";
+        document.getElementById("summary").className = "summary";
+        
+        updateStats(formattedJSON, jsonObject);
+        isValidJSON = true;
+        showResult();
+        
+      } catch (e) {
+        showError("Invalid JSON: " + e.message);
+      }
+    }
+
+    function clearJSON() {
+      document.getElementById("textBox").innerText = '';
+      document.getElementById("jsonDisplay").textContent = 'Your formatted JSON will appear here...';
+      document.getElementById("jsonDisplay").className = "json-display";
+      document.getElementById("resultSection").style.display = 'none';
+      originalJSON = '';
+      formattedJSON = '';
+      isValidJSON = false;
+    }
+
+    function copyJSON() {
+      const text = document.getElementById("jsonDisplay").textContent;
+      if (text && text !== 'Your formatted JSON will appear here...') {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('JSON copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy JSON: ', err);
+          alert('Failed to copy JSON to clipboard.');
+        });
+      } else {
+        alert('Please format or validate some JSON first.');
+      }
+    }
+
+    function showResult() {
+      document.getElementById("resultSection").style.display = 'block';
+      document.getElementById("jsonDisplay").className = "json-display";
+      
+      // Scroll to results
+      document.getElementById("resultSection").scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'nearest' 
+      });
+    }
+
+    function showError(message) {
+      document.getElementById("jsonDisplay").textContent = message;
+      document.getElementById("jsonDisplay").className = "error-display";
+      document.getElementById("resultTitle").textContent = "Validation Error";
+      document.getElementById("validationBadge").className = "validation-badge badge-invalid";
+      document.getElementById("validationBadge").innerHTML = '<i class="fas fa-exclamation-circle"></i> JSON is Invalid';
+      document.getElementById("validationStatus").textContent = message;
+      document.getElementById("summary").className = "summary error-summary";
+      
+      document.getElementById("originalSize").textContent = '0 B';
+      document.getElementById("formattedSize").textContent = '0 B';
+      document.getElementById("objectCount").textContent = '0';
+      document.getElementById("arrayCount").textContent = '0';
+      
+      isValidJSON = false;
+      showResult();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textBox = document.getElementById("textBox");
+      textBox.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textBox.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Auto-validate as user types if enabled
+      const validateCheckbox = document.getElementById("validateOnType");
+      let typingTimer;
+      
+      textBox.addEventListener('input', function() {
+        if (validateCheckbox.checked) {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(validateJSON, 1000);
+        }
+      });
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
