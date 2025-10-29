@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS Gradient Generator - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .generator-section {
+      margin: 1.5rem 0;
+    }
+
+    .color-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .color-picker {
+      text-align: center;
+    }
+
+    .color-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    input[type="color"] {
+      width: 80px;
+      height: 80px;
+      border: none;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    input[type="color"]:hover {
+      transform: scale(1.05);
+    }
+
+    .color-value {
+      margin-top: 0.5rem;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--rounded);
+      transition: var(--transition);
+    }
+
+    .color-value:hover {
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+
+    .controls-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .control-item {
+      text-align: left;
+    }
+
+    .control-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .preview-section {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .preview-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .gradient-preview {
+      height: 200px;
+      border-radius: var(--rounded);
+      border: 3px solid var(--light-red);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .gradient-preview:hover {
+      border-color: var(--primary-red);
+    }
+
+    .css-output {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 2px solid var(--primary-red);
+      text-align: left;
+    }
+
+    .css-code {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+      word-break: break-all;
+      cursor: pointer;
+      padding: 1rem;
+      background-color: #2d3748;
+      color: #e2e8f0;
+      border-radius: var(--rounded);
+      transition: var(--transition);
+    }
+
+    .css-code:hover {
+      background-color: #4a5568;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .gradient-types {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .gradient-type {
+      padding: 0.5rem 1rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      transition: var(--transition);
+      border: 1px solid var(--light-red);
+    }
+
+    .gradient-type.active {
+      background-color: var(--primary-red);
+      color: var(--white);
+      border-color: var(--primary-red);
+    }
+
+    .angle-control {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .angle-slider {
+      flex: 1;
+    }
+
+    .angle-value {
+      font-weight: 600;
+      color: var(--primary-red);
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .gradient-history {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .history-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .history-gradient {
+      width: 80px;
+      height: 60px;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .history-gradient:hover {
+      transform: scale(1.1);
+      border-color: var(--primary-red);
+    }
+
+    .copy-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-red);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .color-controls {
+        grid-template-columns: 1fr;
+      }
+      
+      .controls-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .gradient-types {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gradient-preview {
+        height: 150px;
+      }
+      
+      .history-gradient {
+        width: 70px;
+        height: 50px;
+      }
+      
+      input[type="color"] {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>CSS Gradient Generator</h1>
+    
+    <div class="calculator-info">
+      <h3>Create beautiful CSS gradients:</h3>
+      <ul>
+        <li>Generate linear and radial gradients</li>
+        <li>Customize colors, directions, and angles</li>
+        <li>Real-time gradient preview</li>
+        <li>Save your favorite gradients</li>
+      </ul>
+    </div>
+    
+    <div class="generator-section">
+      <div class="color-controls">
+        <div class="color-picker">
+          <label class="color-label">Start Color</label>
+          <input type="color" id="color1" value="#ff7f50" />
+          <div class="color-value" id="color1Value" onclick="copyColor('color1Value')">#FF7F50</div>
+        </div>
+        
+        <div class="color-picker">
+          <label class="color-label">End Color</label>
+          <input type="color" id="color2" value="#1e90ff" />
+          <div class="color-value" id="color2Value" onclick="copyColor('color2Value')">#1E90FF</div>
+        </div>
+      </div>
+
+      <div class="gradient-types">
+        <div class="gradient-type active" onclick="setGradientType('linear')">Linear Gradient</div>
+        <div class="gradient-type" onclick="setGradientType('radial')">Radial Gradient</div>
+      </div>
+
+      <div class="controls-group">
+        <div class="control-item">
+          <label class="control-label" for="direction">Gradient Direction</label>
+          <select id="direction">
+            <option value="to right">Left to Right</option>
+            <option value="to left">Right to Left</option>
+            <option value="to bottom">Top to Bottom</option>
+            <option value="to top">Bottom to Top</option>
+            <option value="to top left">Bottom Right to Top Left</option>
+            <option value="to bottom right">Top Left to Bottom Right</option>
+          </select>
+        </div>
+        
+        <div class="control-item">
+          <label class="control-label">Custom Angle</label>
+          <div class="angle-control">
+            <input type="range" id="angleSlider" class="angle-slider" min="0" max="360" value="90" />
+            <span id="angleValue" class="angle-value">90°</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="button" onclick="generateGradient()">
+          <i class="fas fa-sync-alt"></i> Generate Gradient
+        </button>
+        <button class="button button-secondary" onclick="generateRandomGradient()">
+          <i class="fas fa-random"></i> Random Gradient
+        </button>
+        <button class="button button-secondary" onclick="addToHistory()">
+          <i class="fas fa-save"></i> Save to History
+        </button>
+        <button class="button button-clear" onclick="clearGradient()">
+          <i class="fas fa-eraser"></i> Clear
+        </button>
+      </div>
+    </div>
+    
+    <div class="preview-section" id="previewSection">
+      <div class="preview-title">Gradient Preview</div>
+      
+      <div class="gradient-preview" id="previewBox"></div>
+      
+      <div class="css-output">
+        <div class="control-label">CSS Code</div>
+        <div class="css-code" id="cssCode" onclick="copyToClipboard('cssCode')">
+          background: linear-gradient(to right, #FF7F50, #1E90FF);
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button class="button" onclick="copyToClipboard('cssCode')">
+          <i class="fas fa-copy"></i> Copy CSS Code
+        </button>
+      </div>
+    </div>
+
+    <div class="gradient-history" id="gradientHistory">
+      <div class="history-title">Gradient History</div>
+      <div class="history-grid" id="historyGrid">
+        <!-- Gradient history will be populated here -->
+      </div>
+      
+      <div class="button-group">
+        <button class="button button-clear" onclick="clearHistory()">
+          <i class="fas fa-trash"></i> Clear History
+        </button>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> CSS code copied!
+  </div>
+
+  <script>
+    let gradientType = 'linear';
+    let currentGradient = null;
+    let gradientHistory = [];
+
+    // Initialize with default gradient
+    generateGradient();
+
+    function setGradientType(type) {
+      gradientType = type;
+      
+      // Update active state
+      document.querySelectorAll('.gradient-type').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update direction options for radial gradients
+      const directionSelect = document.getElementById('direction');
+      if (type === 'radial') {
+        directionSelect.innerHTML = `
+          <option value="circle">Circle</option>
+          <option value="ellipse">Ellipse</option>
+          <option value="circle at center">Circle at Center</option>
+          <option value="circle at top">Circle at Top</option>
+          <option value="circle at bottom">Circle at Bottom</option>
+        `;
+      } else {
+        directionSelect.innerHTML = `
+          <option value="to right">Left to Right</option>
+          <option value="to left">Right to Left</option>
+          <option value="to bottom">Top to Bottom</option>
+          <option value="to top">Bottom to Top</option>
+          <option value="to top left">Bottom Right to Top Left</option>
+          <option value="to bottom right">Top Left to Bottom Right</option>
+        `;
+      }
+      
+      generateGradient();
+    }
+
+    function generateGradient() {
+      const color1 = document.getElementById("color1").value.toUpperCase();
+      const color2 = document.getElementById("color2").value.toUpperCase();
+      const direction = document.getElementById("direction").value;
+      const angle = document.getElementById("angleSlider").value;
+      
+      // Update color value displays
+      document.getElementById("color1Value").textContent = color1;
+      document.getElementById("color2Value").textContent = color2;
+
+      let gradient;
+      let cssCode;
+      
+      if (gradientType === 'linear') {
+        // Use custom angle if direction is not predefined
+        const useCustomAngle = !direction.startsWith('to ');
+        const gradientDirection = useCustomAngle ? `${angle}deg` : direction;
+        
+        gradient = `linear-gradient(${gradientDirection}, ${color1}, ${color2})`;
+        cssCode = `background: ${gradient};`;
+      } else {
+        gradient = `radial-gradient(${direction}, ${color1}, ${color2})`;
+        cssCode = `background: ${gradient};`;
+      }
+
+      const previewBox = document.getElementById("previewBox");
+      previewBox.style.background = gradient;
+
+      const cssOutput = document.getElementById("cssCode");
+      cssOutput.textContent = cssCode;
+      
+      currentGradient = {
+        type: gradientType,
+        color1,
+        color2,
+        direction,
+        angle,
+        gradient,
+        cssCode
+      };
+    }
+
+    function generateRandomGradient() {
+      const randomColor1 = '#' + Math.floor(Math.random() * 16777215).toString(16).toUpperCase().padStart(6, '0');
+      const randomColor2 = '#' + Math.floor(Math.random() * 16777215).toString(16).toUpperCase().padStart(6, '0');
+      
+      document.getElementById("color1").value = randomColor1;
+      document.getElementById("color2").value = randomColor2;
+      
+      // Random direction
+      const directions = ['to right', 'to left', 'to bottom', 'to top', 'to top left', 'to bottom right'];
+      const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+      document.getElementById("direction").value = randomDirection;
+      
+      // Random angle
+      const randomAngle = Math.floor(Math.random() * 360);
+      document.getElementById("angleSlider").value = randomAngle;
+      document.getElementById("angleValue").textContent = `${randomAngle}°`;
+      
+      generateGradient();
+      showNotification("Random gradient generated!");
+    }
+
+    function clearGradient() {
+      document.getElementById("color1").value = "#FF7F50";
+      document.getElementById("color2").value = "#1E90FF";
+      document.getElementById("direction").value = "to right";
+      document.getElementById("angleSlider").value = "90";
+      document.getElementById("angleValue").textContent = "90°";
+      
+      generateGradient();
+      showNotification("Gradient reset to default!");
+    }
+
+    function addToHistory() {
+      if (!currentGradient) {
+        showNotification("Please generate a gradient first!", true);
+        return;
+      }
+      
+      // Avoid duplicates
+      const gradientString = JSON.stringify(currentGradient);
+      if (!gradientHistory.some(g => JSON.stringify(g) === gradientString)) {
+        gradientHistory.unshift(currentGradient);
+        
+        // Keep only last 8 gradients
+        if (gradientHistory.length > 8) {
+          gradientHistory.pop();
+        }
+        
+        updateHistoryDisplay();
+        showNotification("Gradient added to history!");
+      } else {
+        showNotification("Gradient already in history!");
+      }
+    }
+
+    function updateHistoryDisplay() {
+      const historyGrid = document.getElementById("historyGrid");
+      historyGrid.innerHTML = '';
+      gradientHistory.forEach((gradient, index) => {
+        const gradientElement = document.createElement('div');
+        gradientElement.className = 'history-gradient';
+        gradientElement.style.background = gradient.gradient;
+        gradientElement.title = `${gradient.color1} to ${gradient.color2}`;
+        gradientElement.addEventListener('click', () => {
+          loadGradientFromHistory(index);
+        });
+        historyGrid.appendChild(gradientElement);
+      });
+    }
+
+    function loadGradientFromHistory(index) {
+      const gradient = gradientHistory[index];
+      
+      document.getElementById("color1").value = gradient.color1;
+      document.getElementById("color2").value = gradient.color2;
+      document.getElementById("direction").value = gradient.direction;
+      document.getElementById("angleSlider").value = gradient.angle;
+      document.getElementById("angleValue").textContent = `${gradient.angle}°`;
+      
+      // Set gradient type
+      setGradientType(gradient.type);
+      
+      showNotification("Gradient loaded from history!");
+    }
+
+    function clearHistory() {
+      gradientHistory = [];
+      updateHistoryDisplay();
+      showNotification("Gradient history cleared!");
+    }
+
+    function copyToClipboard(elementId) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("CSS code copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        showNotification("Failed to copy CSS code!", true);
+      });
+    }
+
+    function copyColor(elementId) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("Color code copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        showNotification("Failed to copy color code!", true);
+      });
+    }
+
+    function showNotification(message, isError = false) {
+      const copyNotification = document.getElementById("copyNotification");
+      copyNotification.textContent = message;
+      copyNotification.style.background = isError ? '#e53e3e' : 'var(--primary-red)';
+      copyNotification.classList.add('show');
+      
+      setTimeout(() => {
+        copyNotification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update angle value display
+      const angleSlider = document.getElementById("angleSlider");
+      const angleValue = document.getElementById("angleValue");
+      
+      angleSlider.addEventListener('input', function() {
+        angleValue.textContent = `${this.value}°`;
+        generateGradient();
+      });
+      
+      // Auto-generate when colors change
+      document.getElementById("color1").addEventListener('input', generateGradient);
+      document.getElementById("color2").addEventListener('input', generateGradient);
+      document.getElementById("direction").addEventListener('change', generateGradient);
+      
+      // Initialize history display
+      updateHistoryDisplay();
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
