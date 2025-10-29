@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Remove Duplicate Lines - Free Converter Tools</title>
+  <style>
+    :root {
+      --primary-red: #e74c3c;
+      --dark-red: #c0392b;
+      --light-red: #f9ebea;
+      --white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+      --bg-gray: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --rounded: 8px;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .input-section {
+      margin: 1.5rem 0;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .text-area {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--light-red);
+      border-radius: var(--rounded);
+      background-color: var(--white);
+      color: var(--text-dark);
+      transition: var(--transition);
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 200px;
+      font-family: inherit;
+      outline: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .text-area:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .text-area[placeholder]:empty:before {
+      content: attr(placeholder);
+      color: var(--text-light);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .button {
+      background-color: var(--primary-red);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 0.9rem;
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .button:hover {
+      background-color: var(--dark-red);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-secondary {
+      background-color: var(--light-red);
+      color: var(--primary-red);
+      border: 1px solid var(--light-red);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--primary-red);
+      color: var(--white);
+    }
+
+    .button-clear {
+      background-color: #fff5f5;
+      color: var(--dark-red);
+      border: 1px solid #fed7d7;
+    }
+
+    .button-clear:hover {
+      background-color: var(--dark-red);
+      color: var(--white);
+    }
+
+    .result-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: var(--rounded);
+      border: 1px solid var(--light-red);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: center;
+      width: 100%;
+    }
+
+    .back-link:hover {
+      color: var(--dark-red);
+      text-decoration: underline;
+    }
+
+    .calculator-info {
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .calculator-info h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .calculator-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .calculator-info li {
+      padding: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calculator-info li:before {
+      content: "✓";
+      color: var(--primary-red);
+      font-weight: bold;
+    }
+
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #e8f5e8;
+      border-radius: var(--rounded);
+      border: 1px solid #4caf50;
+    }
+
+    .summary p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    .options-group {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--light-red);
+      border-radius: var(--rounded);
+    }
+
+    .option-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-red);
+    }
+
+    .option-label {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      
+      .options-group {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Remove Duplicate Lines</h1>
+    
+    <div class="calculator-info">
+      <h3>Clean your text data:</h3>
+      <ul>
+        <li>Remove duplicate lines automatically</li>
+        <li>Preserve original order</li>
+        <li>Case-sensitive and insensitive options</li>
+        <li>Real-time line statistics</li>
+      </ul>
+    </div>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="textBox">Enter Your Text (One item per line)</label>
+        <div 
+          class="text-area" 
+          id="textBox" 
+          contenteditable="true" 
+          placeholder="Paste or type your text here, with each item on a separate line..."
+        ></div>
+      </div>
+
+      <div class="options-group">
+        <div class="option-item">
+          <input type="checkbox" id="caseSensitive" checked>
+          <label class="option-label" for="caseSensitive">Case Sensitive</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="trimSpaces" checked>
+          <label class="option-label" for="trimSpaces">Trim Spaces</label>
+        </div>
+        <div class="option-item">
+          <input type="checkbox" id="removeEmpty" checked>
+          <label class="option-label" for="removeEmpty">Remove Empty Lines</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button class="button" onclick="removeDuplicates()">
+        <i class="fas fa-filter"></i> Remove Duplicates
+      </button>
+      <button class="button button-secondary" onclick="sortLines()">
+        <i class="fas fa-sort-alpha-down"></i> Sort Lines
+      </button>
+      <button class="button button-secondary" onclick="reverseLines()">
+        <i class="fas fa-sort-amount-down"></i> Reverse Lines
+      </button>
+      <button class="button button-clear" onclick="clearText()">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+      <button class="button button-secondary" onclick="copyText()">
+        <i class="fas fa-copy"></i> Copy Result
+      </button>
+    </div>
+    
+    <div class="result-section" id="resultSection">
+      <div class="result-title">Processing Results</div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="originalLines">0</div>
+          <div class="stat-label">Original Lines</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="uniqueLines">0</div>
+          <div class="stat-label">Unique Lines</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="duplicatesRemoved">0</div>
+          <div class="stat-label">Duplicates Removed</div>
+        </div>
+      </div>
+      
+      <div class="summary" id="summary">
+        <p><i class="fas fa-info-circle"></i> Removed <strong id="removedCount">0 duplicate lines</strong> from your text</p>
+        <p><i class="fas fa-percentage"></i> Reduced text by <strong id="reductionPercent">0%</strong> by removing duplicates</p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to All Tools</a>
+  </div>
+
+  <script>
+    function getTextContent() {
+      return document.getElementById("textBox").innerText;
+    }
+
+    function updateStats(originalCount, uniqueCount) {
+      const duplicatesRemoved = originalCount - uniqueCount;
+      const reductionPercent = originalCount > 0 ? Math.round((duplicatesRemoved / originalCount) * 100) : 0;
+      
+      document.getElementById("originalLines").textContent = originalCount;
+      document.getElementById("uniqueLines").textContent = uniqueCount;
+      document.getElementById("duplicatesRemoved").textContent = duplicatesRemoved;
+      document.getElementById("removedCount").textContent = duplicatesRemoved + " duplicate line" + (duplicatesRemoved !== 1 ? "s" : "");
+      document.getElementById("reductionPercent").textContent = reductionPercent + "%";
+    }
+
+    function removeDuplicates() {
+      const content = getTextContent();
+      const lines = content.split('\n');
+      const caseSensitive = document.getElementById("caseSensitive").checked;
+      const trimSpaces = document.getElementById("trimSpaces").checked;
+      const removeEmpty = document.getElementById("removeEmpty").checked;
+      
+      let processedLines = lines.map(line => trimSpaces ? line.trim() : line);
+      
+      if (removeEmpty) {
+        processedLines = processedLines.filter(line => line !== "");
+      }
+      
+      const uniqueLines = [];
+      const seen = new Set();
+      
+      for (const line of processedLines) {
+        const key = caseSensitive ? line : line.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueLines.push(line);
+        }
+      }
+      
+      document.getElementById("textBox").innerText = uniqueLines.join('\n');
+      updateStats(processedLines.length, uniqueLines.length);
+    }
+
+    function sortLines() {
+      const content = getTextContent();
+      const lines = content.split('\n').filter(line => line.trim() !== '');
+      const sortedLines = lines.sort();
+      document.getElementById("textBox").innerText = sortedLines.join('\n');
+      updateStats(lines.length, lines.length);
+    }
+
+    function reverseLines() {
+      const content = getTextContent();
+      const lines = content.split('\n').filter(line => line.trim() !== '');
+      const reversedLines = lines.reverse();
+      document.getElementById("textBox").innerText = reversedLines.join('\n');
+      updateStats(lines.length, lines.length);
+    }
+
+    function clearText() {
+      document.getElementById("textBox").innerText = '';
+      updateStats(0, 0);
+    }
+
+    function copyText() {
+      const text = getTextContent();
+      if (text.trim()) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Text copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+          alert('Failed to copy text to clipboard.');
+        });
+      } else {
+        alert('Please enter some text first.');
+      }
+    }
+
+    // Auto-count as user types (with debounce)
+    let typingTimer;
+    const doneTypingInterval = 1000; // 1 second
+    
+    document.getElementById('textBox').addEventListener('input', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(updateLineCount, doneTypingInterval);
+    });
+
+    function updateLineCount() {
+      const content = getTextContent();
+      const lines = content.split('\n').filter(line => line.trim() !== '');
+      updateStats(lines.length, lines.length);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add focus style to contenteditable div
+      const textBox = document.getElementById("textBox");
+      textBox.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--primary-red)';
+        this.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+      });
+      
+      textBox.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--light-red)';
+        this.style.boxShadow = 'none';
+      });
+      
+      // Initial count if there's text
+      updateLineCount();
+    });
+  </script>
+  
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
